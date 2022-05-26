@@ -13,16 +13,22 @@ const INFLUXDB_KEY = process.env.INFLUXDB_KEY;
 
 // Get all plug-in cars
 app.get('/ev', async (req, res) => {
-    var x = Xray();
-    const data = await x('https://ev-database.nl/', '.list-item', [
-        {
-            make: 'h2 span',
-            model: '.model',
-            efficiency: '.efficiency',
-            topspeed: '.topspeed',
-        },
-    ]);
-    res.json(data);
+    const x = Xray();
+
+    try {
+        const data = await x('https://ev-database.nl/', '.list-item', [
+            {
+                make: 'h2 span',
+                model: '.model',
+                efficiency: '.efficiency',
+                topspeed: '.topspeed',
+            },
+        ]);
+        res.json(data);
+    } catch (error) {
+        console.error(error);
+        res.json({ error });
+    }
 });
 
 // Electricity map
@@ -48,7 +54,7 @@ app.get('/em', async (req, res) => {
         res.json(data);
     } catch (error) {
         console.error(error);
-        res.json([]);
+        res.json({ error });
     }
 });
 
@@ -69,7 +75,7 @@ app.get('/ep', async (req, res) => {
         res.json(data);
     } catch (error) {
         console.error(error);
-        res.json({});
+        res.json({ error });
     }
 });
 
