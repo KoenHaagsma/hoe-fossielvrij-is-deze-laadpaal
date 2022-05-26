@@ -2,9 +2,14 @@ const express = require('express');
 const app = express();
 const Xray = require('x-ray');
 require('dotenv').config();
+const { groupBy } = require('./helpers/groupBy.js');
 const { InfluxDB } = require('@influxdata/influxdb-client');
 
 const port = process.env.PORT || 4242;
+
+const INFLUXDB_URL = process.env.INFLUXDB_URL;
+const INFLUXDB_ORG = process.env.INFLUXDB_ORG;
+const INFLUXDB_KEY = process.env.INFLUXDB_KEY;
 
 // Get all plug-in cars
 app.get('/ev', async (req, res) => {
@@ -20,22 +25,10 @@ app.get('/ev', async (req, res) => {
     res.json(data);
 });
 
+// Electricity map
 app.get('/em', async (req, res) => {
-    const INFLUXDB_URL = process.env.INFLUXDB_URL;
-    const INFLUXDB_ORG = process.env.INFLUXDB_ORG;
-    const INFLUXDB_KEY = process.env.INFLUXDB_KEY;
-
     const client = new InfluxDB({ url: INFLUXDB_URL, token: INFLUXDB_KEY });
     const queryApi = client.getQueryApi(INFLUXDB_ORG);
-
-    const groupBy = (items, prop) => {
-        return items.reduce((out, item) => {
-            const value = item[prop];
-            out[value] = out[value] || [];
-            out[value].push(item);
-            return out;
-        }, {});
-    };
 
     const query = `
     from(bucket: "elmap")
@@ -48,6 +41,7 @@ app.get('/em', async (req, res) => {
     |> sort(columns: ["_time"], desc: false)
     |> yield(name: "mean")
     `;
+
     try {
         const rows = await queryApi.collectRows(query);
         const data = Object.entries(groupBy(rows, '_field'));
@@ -55,6 +49,27 @@ app.get('/em', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.json([]);
+    }
+});
+
+// Energy providers
+app.get('/ep', async (req, res) => {
+    const client = new InfluxDB({ url: INFLUXDB_URL, token: INFLUXDB_KEY });
+    const queryApi = client.getQueryApi(INFLUXDB_ORG);
+
+    const query = `
+    from(bucket: "providers")
+    |> range(start: -28h, stop: -24h)
+    |> filter(fn: (r) => r["_measurement"] == "past_providers")
+    `;
+
+    try {
+        const rows = await queryApi.collectRows(query);
+        const data = Object.entries(groupBy(rows, '_field'));
+        res.json(data);
+    } catch (error) {
+        console.error(error);
+        res.json({});
     }
 });
 
