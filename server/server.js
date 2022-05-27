@@ -2,10 +2,12 @@ const express = require('express');
 const app = express();
 const Xray = require('x-ray');
 require('dotenv').config();
-const { groupBy } = require('./helpers/groupBy.js');
 const { InfluxDB } = require('@influxdata/influxdb-client');
 const cors = require('cors');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
+const { groupBy } = require('./helpers/groupBy.js');
+const { formatLngLat } = require('./helpers/formatLngLat.js');
 
 app.use(cors());
 
@@ -84,18 +86,26 @@ app.get('/ep', async (req, res) => {
 });
 
 app.get('/sr', async (req, res) => {
-    // const lngF = (parseFloat(req.query.lng) + 0.03).toFixed(16);
-    // const lngS = (parseFloat(req.query.lng) - 0.03).toFixed(16);
-    // const latF = (parseFloat(req.query.lat) + 0.03).toFixed(16);
-    // const latS = (parseFloat(req.query.lat) - 0.03).toFixed(16);
-    // console.log(lngF, latF);
+    const decimalPoints = 16;
+    const plusMinus = 0.03;
     const zoomValue = 15;
 
+    const lngF = formatLngLat(req.query.lng, decimalPoints, plusMinus, true);
+    const lngS = formatLngLat(req.query.lng, decimalPoints, plusMinus, false);
+    const latF = formatLngLat(req.query.lat, decimalPoints, plusMinus, true);
+    const latS = formatLngLat(req.query.lat, decimalPoints, plusMinus, false);
+
+    console.log(lngF, lngS, latF, latS);
+
     try {
-        // const url = `https://ui-map.shellrecharge.com/api/map/v2/markers/${latF}/${latS}/${lngF}/${lngS}/${zoomValue}`;
-        const url = `https://ui-map.shellrecharge.com/api/map/v2/markers/${4.8130318780517545}/${4.8679635186767545}/${52.37003725903988}/${52.39298456934279}/${zoomValue}`;
+        // Lesser values first!
+        const url = `https://ui-map.shellrecharge.com/api/map/v2/markers/${lngS}/${lngF}/${latS}/${latF}/${zoomValue}`;
+        // Example URL
+        // const url = `https://ui-map.shellrecharge.com/api/map/v2/markers/${4.8130318780517545}/${4.8679635186767545}/${52.37003725903988}/${52.39298456934279}/${zoomValue}`;
+        console.log(url);
         const response = await fetch(url);
         const data = await response.json();
+
         res.json(data);
     } catch (error) {
         console.error(error);

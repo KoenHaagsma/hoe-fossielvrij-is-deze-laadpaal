@@ -7,6 +7,4 @@ const groupBy = (items, prop) => {
     }, {});
 };
 
-module.exports = {
-    groupBy,
-};
+module.exports = { groupBy };
