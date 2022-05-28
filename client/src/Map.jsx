@@ -6,7 +6,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 // icons
 import iconMarker from './assets/icons/png/marker-stroked.png';
 
-mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2wzbjNuY255MGF3ODNwbnl2amJuYms4MCJ9.QD5jhV_KLgBjGYcGOFnwTg';
+mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN;
 
 export default function Map() {
     const mapContainerRef = useRef(null);
