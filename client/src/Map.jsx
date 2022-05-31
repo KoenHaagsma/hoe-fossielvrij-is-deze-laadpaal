@@ -119,39 +119,6 @@ export default function Map() {
                 });
             });
 
-            console.log(filteredMarkers);
-
-            // map.loadImage(iconMarker, (error, image) => {
-
-            //     if (error) throw error;
-            //     map.addImage('iconMarker', image);
-
-            //     map.addSource('loadingPoles', {
-            //         type: 'geojson',
-            //         data: {
-            //             type: 'FeatureCollection',
-            //             features: filteredMarkers,
-            //         },
-            //     });
-
-            //     // Add loading poles layers
-            //     map.addLayer({
-            //         id: 'loadingPoles',
-            //         type: 'symbol',
-            //         source: 'loadingPoles',
-            //         layout: {
-            //             'icon-image': 'iconMarker',
-            //             'text-field': ['get', 'title'],
-            //             'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-            //             'text-offset': [0, 1.25],
-            //             'text-anchor': 'top',
-            //         },
-            //     });
-            // });
-
-            // const layers = map.getStyle().layers;
-            // console.log(layers[1].id);
-
             filteredMarkers.map((filteredMarker) => {
                 let marker = new mapboxgl.Marker({
                     scale: 0.25,
