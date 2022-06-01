@@ -58,4 +58,3 @@ function setupMap(position) {
         );
     });
 }
-s;

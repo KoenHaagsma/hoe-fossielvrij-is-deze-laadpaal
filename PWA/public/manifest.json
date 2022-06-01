@@ -1,0 +1,10 @@
+{
+    "name": "Greenest pole",
+    "short_name": "Greenpole",
+    "theme_color": "#2fb668",
+    "background_color": "#2fb668",
+    "display": "standalone",
+    "orientation": "portrait",
+    "start_url": "/",
+    "icons": []
+}
