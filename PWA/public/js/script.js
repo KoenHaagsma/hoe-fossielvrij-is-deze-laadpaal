@@ -1,5 +1,14 @@
 mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2wzbjNuY255MGF3ODNwbnl2amJuYms4MCJ9.QD5jhV_KLgBjGYcGOFnwTg';
 
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('../sw.js').then(function (registration) {
+            return registration.update();
+        });
+    });
+}
+
+// Setup map
 setMap();
 
 function setMap() {
@@ -34,11 +43,27 @@ function setupMap(position) {
             const data = await response.json();
 
             data.map((singleMarker) => {
-                let marker = new mapboxgl.Marker({
+                const marker = new mapboxgl.Marker({
                     scale: 0.5,
                 })
                     .setLngLat([singleMarker.coordinates.longitude, singleMarker.coordinates.latitude])
                     .addTo(map);
+
+                marker._element.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const detailContainer = document.querySelector('.details');
+
+                    console.log(detailContainer.classList.contains('open'));
+
+                    if (detailContainer.classList.contains('open')) {
+                        detailContainer.classList.remove('open');
+                    } else {
+                        detailContainer.classList.add('open');
+                    }
+
+                    console.log(detailContainer);
+                    console.log(`click - ${singleMarker.operatorName} - ${singleMarker.uniqueKey}`);
+                });
             });
         } catch (e) {
             console.error(e);
@@ -49,12 +74,10 @@ function setupMap(position) {
                 positionoptions: {
                     enableHighAccuracy: true,
                 },
-                // When active the map will receive updates to the device's location as it changes.
                 trackUserLocation: true,
-                // Draw an arrow next to the location dot to indicate which direction the device is heading.
                 showUserHeading: true,
             }),
-            'bottom-right',
+            'top-right',
         );
     });
 }
