@@ -1,8 +1,8 @@
-# ⚙ Project name
+# ⚙ Hoe fossiel vrij is deze laadpaal
 
 *Insert picture/gif of full project UI*
 ## 📂 Assignment
-*Assignment explanation*
+Bouw en ontwikkel een webapplicatie waarin inzichtelijk wordt waar de gebruiker groen kan laden en wanneer hij/zij dat het best kan doen.
 
 ## 🧾 Table of contents
 -   [About the project](##About-the-project)
@@ -18,7 +18,7 @@
 *Tell where the project is about*
 
 ## 🛠 Built with
-*Where is the application made with*
+ Node.js, Express, Pug, SCSS
 
 ## 🔍 Getting started
 *Before you can start you need to follow the installation*
