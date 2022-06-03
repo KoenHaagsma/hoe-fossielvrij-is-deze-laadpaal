@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config();
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const compression = require('compression');
+const path = require('path');
 
 const { groupBy } = require('./helpers/groupBy.js');
 const { formatLngLat } = require('./helpers/formatLngLat.js');
@@ -19,7 +20,7 @@ app.use(/.*-[0-9a-f]{10}\..*/, (req, res, next) => {
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-app.use(express.static('public'));
+app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

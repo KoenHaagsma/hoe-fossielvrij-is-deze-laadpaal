@@ -1,13 +1,5 @@
 mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2wzbjNuY255MGF3ODNwbnl2amJuYms4MCJ9.QD5jhV_KLgBjGYcGOFnwTg';
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-        navigator.serviceWorker.register('../sw.js').then(function (registration) {
-            return registration.update();
-        });
-    });
-}
-
 // Setup map
 setMap();
 
@@ -16,16 +8,30 @@ function setMap() {
         setupMap({ lat: position.coords.latitude, lng: position.coords.longitude });
     };
 
-    const errorLocation = (position) => {
-        setupMap({ lat: -1, lng: -2 });
+    const errorLocation = (error) => {
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                console.error('User denied the request for Geolocation.');
+                break;
+
+            case error.POSITION_UNAVAILABLE:
+                console.error('Location information is unavailable.');
+                break;
+
+            case error.TIMEOUT:
+                console.error('The request to get user location timed out.');
+                break;
+
+            case error.UNKNOWN_ERROR:
+                console.error('An unknown error occurred.');
+                break;
+        }
     };
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(setPosition, errorLocation, {
             enableHighAccuracy: true,
         });
-    } else {
-        return false;
     }
 }
 
