@@ -42,7 +42,6 @@ app.get('/poles', async (req, res) => {
         const url = `https://ui-map.shellrecharge.com/api/map/v2/markers/${lngS}/${lngF}/${latS}/${latF}/${zoomValue}`;
         // Example URL
         // const url = `https://ui-map.shellrecharge.com/api/map/v2/markers/${4.8130318780517545}/${4.8679635186767545}/${52.37003725903988}/${52.39298456934279}/${zoomValue}`;
-        console.log(url);
         const response = await fetch(url);
         const data = await response.json();
 
