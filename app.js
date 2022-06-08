@@ -1,4 +1,5 @@
 const express = require('express');
+const app = express();
 require('dotenv').config();
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const compression = require('compression');
@@ -6,8 +7,6 @@ const path = require('path');
 
 const { groupBy } = require('./helpers/groupBy.js');
 const { formatLngLat } = require('./helpers/formatLngLat.js');
-
-const app = express();
 
 app.use(compression());
 
@@ -26,6 +25,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.render('index');
+});
+
+app.get('/offline', (req, res) => {
+    res.render('offline');
 });
 
 app.get('/poles', async (req, res) => {
