@@ -1,3 +1,5 @@
+const { InfluxDB } = require('@influxdata/influxdb-client');
+
 const express = require('express');
 const app = express();
 require('dotenv').config();
@@ -50,14 +52,25 @@ app.get('/poles', async (req, res) => {
     const latS = formatLngLat(req.query.lat, decimalPoints, plusMinus, false);
 
     try {
+        const client = new InfluxDB({ url: process.env.INFLUXDB_URL, token: process.env.INFLUXDB_KEY });
+        const queryApi = client.getQueryApi(process.env.INFLUXDB_ORG);
         // Lesser values first!
-        const url = `https://ui-map.shellrecharge.com/api/map/v2/markers/${lngS}/${lngF}/${latS}/${latF}/${zoomValue}`;
-        // Example URL
-        // const url = `https://ui-map.shellrecharge.com/api/map/v2/markers/${4.8130318780517545}/${4.8679635186767545}/${52.37003725903988}/${52.39298456934279}/${zoomValue}`;
-        const response = await fetch(url);
-        const data = await response.json();
+        const urlShell = `https://ui-map.shellrecharge.com/api/map/v2/markers/${lngS}/${lngF}/${latS}/${latF}/${zoomValue}`;
+        const response = await fetch(urlShell);
+        const dataShell = await response.json();
 
-        res.json(data);
+        const query = `
+        from(bucket: "providers")
+            |> range(start: -28h, stop: -24h)
+            |> filter(fn: (r) => r["_measurement"] == "past_providers")
+        `;
+
+        const rows = await queryApi.collectRows(query);
+        const dataProviders = Object.entries(groupBy(rows, '_field'));
+
+        console.log(dataProviders[0][0], dataProviders[0][1]);
+        console.log(dataShell[0]);
+        res.json(dataShell);
     } catch (error) {
         console.error(error);
         res.json({ error });
