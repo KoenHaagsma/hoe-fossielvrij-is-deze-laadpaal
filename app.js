@@ -31,6 +31,14 @@ app.get('/offline', (req, res) => {
     res.render('offline');
 });
 
+app.get('/map', (req, res) => {
+    res.render('map');
+});
+
+app.get('/list', (req, res) => {
+    res.render('list');
+});
+
 app.get('/poles', async (req, res) => {
     const decimalPoints = 16;
     const plusMinus = 0.03;

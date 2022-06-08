@@ -7,6 +7,26 @@
     .mapboxgl-ctrl-logo {
         display: none;
     }
+    img {
+        width: auto;
+        height: 100%;
+    }
+    .overlay {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(13, 40, 97, 0.5);
+        top: 0;
+        .info {
+            width: 20rem;
+            height: 25rem;
+            background-color: white;
+            border-radius: 10px;
+        }
+    }
 }
 
 .details {
