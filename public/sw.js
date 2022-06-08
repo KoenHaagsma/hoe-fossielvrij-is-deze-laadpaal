@@ -61,10 +61,8 @@ self.addEventListener('fetch', (event) => {
                     })
                 );
             })
-            .catch(async () => {
-                const cache = await caches.open(STATIC_CACHE_NAME);
-                const cachedResponse = await cache.match('/offline');
-                return cachedResponse;
+            .catch(() => {
+                cache.match('/offline');
             }),
     );
 });

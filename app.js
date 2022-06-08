@@ -1,14 +1,16 @@
 const { InfluxDB } = require('@influxdata/influxdb-client');
+require('dotenv').config();
 
 const express = require('express');
 const app = express();
-require('dotenv').config();
+
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const compression = require('compression');
 const path = require('path');
 
 const { groupBy } = require('./helpers/groupBy.js');
 const { formatLngLat } = require('./helpers/formatLngLat.js');
+const { changeOperator } = require('./helpers/changeOperator.js');
 
 app.use(compression());
 
@@ -54,22 +56,40 @@ app.get('/poles', async (req, res) => {
     try {
         const client = new InfluxDB({ url: process.env.INFLUXDB_URL, token: process.env.INFLUXDB_KEY });
         const queryApi = client.getQueryApi(process.env.INFLUXDB_ORG);
-        // Lesser values first!
-        const urlShell = `https://ui-map.shellrecharge.com/api/map/v2/markers/${lngS}/${lngF}/${latS}/${latF}/${zoomValue}`;
-        const response = await fetch(urlShell);
-        const dataShell = await response.json();
 
         const query = `
         from(bucket: "providers")
             |> range(start: -28h, stop: -24h)
             |> filter(fn: (r) => r["_measurement"] == "past_providers")
         `;
+        const urlShell = `https://ui-map.shellrecharge.com/api/map/v2/markers/${lngS}/${lngF}/${latS}/${latF}/${zoomValue}`;
+
+        const response = await fetch(urlShell);
+        const dataShell = await response.json();
 
         const rows = await queryApi.collectRows(query);
         const dataProviders = Object.entries(groupBy(rows, '_field'));
 
-        console.log(dataProviders[0][0]);
-        console.log(dataShell[0]);
+        // Calculate average CO2/kwh per provider
+        let providersUsage = {};
+        for (provider in dataProviders) {
+            let count = 0;
+            let providerUsage = 0;
+
+            dataProviders[provider][1].forEach((timeRange) => {
+                providerUsage += timeRange._value;
+                count++;
+            });
+
+            providersUsage[dataProviders[provider][0]] = providerUsage / count;
+        }
+
+        // Add provider usage to single pole (object)
+        dataShell.map((pole) => {
+            pole.operatorName = changeOperator(pole.operatorName);
+            pole['emissions'] = providersUsage[pole.operatorName];
+        });
+
         res.json(dataShell);
     } catch (error) {
         console.error(error);

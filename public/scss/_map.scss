@@ -1,8 +1,13 @@
 #map {
     height: 100%;
     width: 100%;
-    .mapboxgl-marker {
+    .custom-marker {
         cursor: pointer;
+        background-image: url(../images/Marker.svg);
+        background-repeat: no-repeat;
+        background-position: center center;
+        height: 2.45rem;
+        width: 1.5rem;
     }
     .mapboxgl-ctrl-logo {
         display: none;
