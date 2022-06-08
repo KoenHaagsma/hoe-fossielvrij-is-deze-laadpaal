@@ -21,7 +21,6 @@ const CACHE_FILES = [
 
 // Install service worker
 self.addEventListener('install', (event) => {
-    // console.log('Service worker has been installed');
     event.waitUntil(
         caches.open(STATIC_CACHE_NAME).then((cache) => {
             console.log('caching shell assets');
@@ -35,7 +34,6 @@ self.addEventListener('activate', (event) => {
     // console.log('Service worker has been activated');
     event.waitUntil(
         caches.keys().then((keys) => {
-            // console.log(keys);
             return Promise.all(
                 keys
                     .filter((key) => key !== STATIC_CACHE_NAME && key !== DYNAMIC_CACHE_NAME)
