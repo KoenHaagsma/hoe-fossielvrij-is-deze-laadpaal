@@ -68,7 +68,7 @@ app.get('/poles', async (req, res) => {
         const rows = await queryApi.collectRows(query);
         const dataProviders = Object.entries(groupBy(rows, '_field'));
 
-        console.log(dataProviders[0][0], dataProviders[0][1]);
+        console.log(dataProviders[0][0]);
         console.log(dataShell[0]);
         res.json(dataShell);
     } catch (error) {
