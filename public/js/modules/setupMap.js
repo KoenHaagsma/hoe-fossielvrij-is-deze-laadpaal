@@ -5,7 +5,8 @@ const userLocationButton = document.querySelector('.getUserLocation');
 const bottomMenu = document.querySelector('.buttomMenu');
 
 function setupMap(position) {
-    const zoom = 15;
+    const zoom = 12;
+    const maxMarkers = 15;
     const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11',
@@ -23,8 +24,25 @@ function setupMap(position) {
         },
     });
 
-    geocoder.on('result', (event) => {
+    geocoder.on('result', async (event) => {
         console.log(event);
+        const lngLat = [event.result.center[0], event.result.center[1]];
+        const response = await fetch(`/poles?lng=${lngLat[0]}&lat=${lngLat[1]}`);
+        const data = await response.json();
+
+        if (!data || data === undefined || data.length === 0) return;
+
+        // Show best pole
+        const bestPole = data.shift();
+        const HTMLMarkerBest = document.createElement('div');
+        HTMLMarkerBest.className = 'custom-marker-best-pole';
+        const bestMarker = new mapboxgl.Marker(HTMLMarkerBest, {
+            scale: 0.5,
+        })
+            .setLngLat([bestPole.coordinates.longitude, bestPole.coordinates.latitude])
+            .addTo(map);
+
+        addToMap(map, data.slice(0, maxMarkers));
     });
 
     map.on('load', async () => {
@@ -52,7 +70,6 @@ function setupMap(position) {
             })
                 .setLngLat([bestPole.coordinates.longitude, bestPole.coordinates.latitude])
                 .addTo(map);
-            console.log(bestPole.score);
 
             // Show personal position
             const HTMLMarkerPersonal = document.createElement('div');
@@ -110,7 +127,6 @@ function setupMap(position) {
             });
 
             // Add all extra markers to map
-            const maxMarkers = 15;
             addToMap(map, data.slice(0, maxMarkers));
         } catch (e) {
             console.error(e);
