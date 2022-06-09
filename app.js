@@ -47,13 +47,14 @@ app.get('/list', (req, res) => {
 
 app.get('/poles', async (req, res) => {
     const decimalPoints = 16;
-    const plusMinus = 0.03;
+    const plusMinusLat = 0.01;
+    const plusMinusLng = 0.01;
     const zoomValue = 15;
 
-    const lngF = formatLngLat(req.query.lng, decimalPoints, plusMinus, true);
-    const lngS = formatLngLat(req.query.lng, decimalPoints, plusMinus, false);
-    const latF = formatLngLat(req.query.lat, decimalPoints, plusMinus, true);
-    const latS = formatLngLat(req.query.lat, decimalPoints, plusMinus, false);
+    const lngF = formatLngLat(req.query.lng, decimalPoints, plusMinusLng, true);
+    const lngS = formatLngLat(req.query.lng, decimalPoints, plusMinusLng, false);
+    const latF = formatLngLat(req.query.lat, decimalPoints, plusMinusLat, true);
+    const latS = formatLngLat(req.query.lat, decimalPoints, plusMinusLat, false);
 
     try {
         const client = new InfluxDB({ url: process.env.INFLUXDB_URL, token: process.env.INFLUXDB_KEY });
@@ -84,11 +85,6 @@ app.get('/poles', async (req, res) => {
             });
 
             providersUsage[dataProviders[provider][0]] = providerUsage / count;
-        }
-
-        console.log(providersUsage);
-        for (let index = 0; index < 20; index++) {
-            console.log(dataShell[index]);
         }
 
         // Add provider usage to single pole (object) and pole score with that + distance to person

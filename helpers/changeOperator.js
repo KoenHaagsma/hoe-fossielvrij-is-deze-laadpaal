@@ -7,6 +7,18 @@ const changeOperator = (operatorName) => {
             return 'Engie';
         case 'Allego':
             return 'PureEnergie';
+        case 'EV-Box':
+            return 'Om_nieuwe_energie';
+        case 'Community by Shell Recharge':
+            return 'PureEnergie';
+        case 'LastMileSolutions':
+            return 'NLE';
+        case 'Blue Current':
+            return 'DVEP_Energie';
+        case 'E-Flux':
+            return 'Oxxio';
+        case 'Abel&co':
+            return 'GreenCaravan+EasyEnergy';
         default:
             return operatorName;
     }

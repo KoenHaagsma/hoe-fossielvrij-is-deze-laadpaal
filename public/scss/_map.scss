@@ -10,6 +10,15 @@
         background-image: url(../images/personal.svg);
         z-index: 10;
     }
+    .custom-marker-best-pole {
+        cursor: pointer;
+        background-repeat: no-repeat;
+        background-position: center center;
+        height: 4.9375rem;
+        width: 4.25rem;
+        background-image: url(../images/best.svg);
+        z-index: 10;
+    }
     .custom-marker {
         cursor: pointer;
         background-repeat: no-repeat;
@@ -80,6 +89,9 @@
             background-color: white;
             border-radius: 10px;
         }
+    }
+    .mapboxgl-popup {
+        z-index: 11;
     }
 }
 
