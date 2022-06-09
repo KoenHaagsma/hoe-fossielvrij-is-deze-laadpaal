@@ -1,14 +1,63 @@
 #map {
     height: 100%;
     width: 100%;
+    .custom-marker-personal {
+        cursor: pointer;
+        background-repeat: no-repeat;
+        background-position: center center;
+        height: 3.8125rem;
+        width: 3.5625rem;
+        background-image: url(../images/personal.svg);
+        z-index: 10;
+    }
     .custom-marker {
         cursor: pointer;
-        background-image: url(../images/Marker.svg);
         background-repeat: no-repeat;
         background-position: center center;
         height: 2.45rem;
         width: 1.5rem;
+        &.marker-46bd54 {
+            background-image: url(../images/46bd54.svg);
+            z-index: 9;
+        }
+        &.marker-C7D751 {
+            background-image: url(../images/C7D751.svg);
+            z-index: 8;
+        }
+        &.marker-EAD649 {
+            background-image: url(../images/EAD649.svg);
+            z-index: 7;
+        }
+        &.marker-D3A940 {
+            background-image: url(../images/D3A940.svg);
+            z-index: 6;
+        }
+        &.marker-C08337 {
+            background-image: url(../images/C08337.svg);
+            z-index: 5;
+        }
+        &.marker-9f522a {
+            background-image: url(../images/9f522a.svg);
+            z-index: 4;
+        }
+        &.marker-733519 {
+            background-image: url(../images/733519.svg);
+            z-index: 3;
+        }
+        &.marker-251304 {
+            background-image: url(../images/251304.svg);
+            z-index: 2;
+        }
+        &.marker-000000 {
+            background-image: url(../images/000000.svg);
+            z-index: 1;
+        }
+        &.marker-ffffff {
+            background-image: url(../images/FFFFFF.svg);
+            z-index: 0;
+        }
     }
+
     .mapboxgl-ctrl-logo {
         display: none;
     }

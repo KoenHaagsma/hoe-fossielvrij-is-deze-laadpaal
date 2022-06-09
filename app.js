@@ -7,10 +7,12 @@ const app = express();
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const compression = require('compression');
 const path = require('path');
+const turf = require('@turf/turf');
 
 const { groupBy } = require('./helpers/groupBy.js');
 const { formatLngLat } = require('./helpers/formatLngLat.js');
 const { changeOperator } = require('./helpers/changeOperator.js');
+const { poleScore } = require('./helpers/poleScore.js');
 
 app.use(compression());
 
@@ -84,10 +86,31 @@ app.get('/poles', async (req, res) => {
             providersUsage[dataProviders[provider][0]] = providerUsage / count;
         }
 
-        // Add provider usage to single pole (object)
+        console.log(providersUsage);
+        for (let index = 0; index < 20; index++) {
+            console.log(dataShell[index]);
+        }
+
+        // Add provider usage to single pole (object) and pole score with that + distance to person
         dataShell.map((pole) => {
+            // Lat -> Lng
+            const from = turf.point([parseFloat(req.query.lat).toFixed(16), parseFloat(req.query.lng).toFixed(16)]);
+            const to = turf.point([pole.coordinates.latitude, pole.coordinates.longitude]);
+
             pole.operatorName = changeOperator(pole.operatorName);
             pole['emissions'] = providersUsage[pole.operatorName];
+            pole['score'] = poleScore(pole['emissions']);
+            // Defaults to kilometres
+            pole['distance'] = turf.distance(from, to);
+        });
+
+        // Sort based on emissions and then on distance
+        dataShell.sort((a, b) => {
+            if (a.emissions === b.emissions) {
+                return a.distance < b.distance ? -1 : 1;
+            } else {
+                return a.emissions < b.emissions ? -1 : 1;
+            }
         });
 
         res.json(dataShell);

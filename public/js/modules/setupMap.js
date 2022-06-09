@@ -13,12 +13,21 @@ function setupMap(position) {
             const response = await fetch(`/poles?lng=${position.lng}&lat=${position.lat}`);
             const data = await response.json();
 
+            const HTMLMarkerPersonal = document.createElement('div');
+            HTMLMarkerPersonal.className = 'custom-marker-personal';
+            const personalMarker = new mapboxgl.Marker(HTMLMarkerPersonal, {
+                scale: 0.5,
+            })
+                .setLngLat([position.lng, position.lat])
+                .addTo(map);
+
             data.map((singleMarker) => {
                 const HTMLMarker = document.createElement('div');
                 HTMLMarker.className = 'custom-marker';
+                HTMLMarker.classList.add(`marker-${singleMarker.score}`);
 
                 const marker = new mapboxgl.Marker(HTMLMarker, {
-                    scale: 0.5,
+                    scale: 0.4,
                 })
                     .setLngLat([singleMarker.coordinates.longitude, singleMarker.coordinates.latitude])
                     .addTo(map);
