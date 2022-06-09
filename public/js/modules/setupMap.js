@@ -1,13 +1,16 @@
 import { addToMap } from './addToMap.js';
 mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2wzbjNuY255MGF3ODNwbnl2amJuYms4MCJ9.QD5jhV_KLgBjGYcGOFnwTg';
+
 const userLocationButton = document.querySelector('.getUserLocation');
+const bottomMenu = document.querySelector('.buttomMenu');
 
 function setupMap(position) {
+    const zoom = 15;
     const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11',
         center: [position.lng, position.lat],
-        zoom: 15,
+        zoom: zoom,
     });
 
     const geocoder = new MapboxGeocoder({
@@ -15,12 +18,28 @@ function setupMap(position) {
         placeholder: 'Zoek naar een plaats',
         mapboxgl: mapboxgl,
         marker: false,
+        flyTo: {
+            zoom: zoom,
+        },
+    });
+
+    geocoder.on('result', (event) => {
+        console.log(event);
     });
 
     map.on('load', async () => {
         try {
+            const bigListButton = document.querySelector('.listButton');
             userLocationButton.style.display = 'flex';
+            bottomMenu.style.display = 'flex';
+
             map.addControl(geocoder);
+
+            bigListButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                location.href = '/list';
+            });
+
             const response = await fetch(`/poles?lng=${position.lng}&lat=${position.lat}`);
             const data = await response.json();
 

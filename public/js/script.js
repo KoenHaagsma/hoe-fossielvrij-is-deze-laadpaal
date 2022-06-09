@@ -2,7 +2,6 @@ import { setupMap } from './modules/setupMap.js';
 import { renderElementAndClean, renderElement, cleanElement } from './modules/renderElement.js';
 
 if (window.location.pathname === '/map') {
-    const buttons = document.querySelector('.buttons');
     const mapContainer = document.querySelector('#map');
 
     const setPosition = (position) => {
