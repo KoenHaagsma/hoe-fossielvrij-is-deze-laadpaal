@@ -1,5 +1,6 @@
 import { addToMap } from './addToMap.js';
 mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2wzbjNuY255MGF3ODNwbnl2amJuYms4MCJ9.QD5jhV_KLgBjGYcGOFnwTg';
+const userLocationButton = document.querySelector('.getUserLocation');
 
 function setupMap(position) {
     const map = new mapboxgl.Map({
@@ -9,8 +10,17 @@ function setupMap(position) {
         zoom: 15,
     });
 
+    const geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        placeholder: 'Zoek naar een plaats',
+        mapboxgl: mapboxgl,
+        marker: false,
+    });
+
     map.on('load', async () => {
         try {
+            userLocationButton.style.display = 'flex';
+            map.addControl(geocoder);
             const response = await fetch(`/poles?lng=${position.lng}&lat=${position.lat}`);
             const data = await response.json();
 
@@ -86,17 +96,6 @@ function setupMap(position) {
         } catch (e) {
             console.error(e);
         }
-
-        map.addControl(
-            new mapboxgl.GeolocateControl({
-                positionoptions: {
-                    enableHighAccuracy: true,
-                },
-                trackUserLocation: true,
-                showUserHeading: true,
-            }),
-            'top-right',
-        );
     });
 }
 
