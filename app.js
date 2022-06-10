@@ -1,5 +1,6 @@
 const { InfluxDB } = require('@influxdata/influxdb-client');
 require('dotenv').config();
+const cors = require('cors');
 
 const express = require('express');
 const app = express();
@@ -13,6 +14,12 @@ const { groupBy } = require('./helpers/groupBy.js');
 const { formatLngLat } = require('./helpers/formatLngLat.js');
 const { changeOperator } = require('./helpers/changeOperator.js');
 const { poleScore } = require('./helpers/poleScore.js');
+
+app.use(cors());
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
 
 app.use(compression());
 
@@ -67,7 +74,13 @@ app.get('/poles', async (req, res) => {
         `;
         const urlShell = `https://ui-map.shellrecharge.com/api/map/v2/markers/${lngS}/${lngF}/${latS}/${latF}/${zoomValue}`;
 
-        const response = await fetch(urlShell);
+        const response = await fetch(urlShell, {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            },
+            type: 'GETS',
+            mode: 'cors',
+        });
         const dataShell = await response.json();
 
         const rows = await queryApi.collectRows(query);

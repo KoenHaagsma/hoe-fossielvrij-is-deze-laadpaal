@@ -1,12 +1,12 @@
 import { addToMap } from './addToMap.js';
-mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2wzbjNuY255MGF3ODNwbnl2amJuYms4MCJ9.QD5jhV_KLgBjGYcGOFnwTg';
+mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2w0OGlkNW16MDNhaTNqcndtMXAxaWo3NyJ9.3oVrDv1704cV_UDQ-QvuHA';
 
 const userLocationButton = document.querySelector('.getUserLocation');
 const bottomMenu = document.querySelector('.buttomMenu');
 
 function setupMap(position) {
     const zoom = 12;
-    const maxMarkers = 15;
+    const maxMarkers = 100;
     const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11',
