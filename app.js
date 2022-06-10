@@ -87,6 +87,8 @@ app.get('/poles', async (req, res) => {
             providersUsage[dataProviders[provider][0]] = providerUsage / count;
         }
 
+        console.log(providersUsage);
+
         // Add provider usage to single pole (object) and pole score with that + distance to person
         dataShell.map((pole) => {
             // Lat -> Lng

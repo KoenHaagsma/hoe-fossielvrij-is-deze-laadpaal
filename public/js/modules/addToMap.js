@@ -13,6 +13,11 @@ function addToMap(map, data) {
             .setLngLat([singleMarker.coordinates.longitude, singleMarker.coordinates.latitude])
             .setPopup(popup)
             .addTo(map);
+
+        marker._element.addEventListener('click', (event) => {
+            event.preventDefault();
+            console.log('click marker');
+        });
     });
 }
 
