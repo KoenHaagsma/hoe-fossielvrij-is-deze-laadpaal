@@ -1,4 +1,4 @@
-mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2w0OGlkNW16MDNhaTNqcndtMXAxaWo3NyJ9.3oVrDv1704cV_UDQ-QvuHA';
+mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2w0OGptdnNoMGQ5dDNrcjJhdzB0NG5wMCJ9.l2fZnsgmtiTsrRW_f28CEQ';
 
 function addToMap(map, data) {
     data.map((singleMarker) => {
