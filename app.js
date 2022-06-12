@@ -53,15 +53,11 @@ app.get('/list', (req, res) => {
 });
 
 app.get('/poles', async (req, res) => {
-    const decimalPoints = 16;
-    const plusMinusLat = 0.01;
-    const plusMinusLng = 0.01;
-    const zoomValue = 15;
-
-    const lngF = formatLngLat(req.query.lng, decimalPoints, plusMinusLng, true);
-    const lngS = formatLngLat(req.query.lng, decimalPoints, plusMinusLng, false);
-    const latF = formatLngLat(req.query.lat, decimalPoints, plusMinusLat, true);
-    const latS = formatLngLat(req.query.lat, decimalPoints, plusMinusLat, false);
+    const zoomValue = 100;
+    const lngF = parseFloat(req.query.lngF);
+    const lngS = parseFloat(req.query.lngS);
+    const latF = parseFloat(req.query.latF);
+    const latS = parseFloat(req.query.latS);
 
     try {
         const client = new InfluxDB({ url: process.env.INFLUXDB_URL, token: process.env.INFLUXDB_KEY });
@@ -72,17 +68,16 @@ app.get('/poles', async (req, res) => {
             |> range(start: -28h, stop: -24h)
             |> filter(fn: (r) => r["_measurement"] == "past_providers")
         `;
-        const urlShell = `https://ui-map.shellrecharge.com/api/map/v2/markers/${lngS}/${lngF}/${latS}/${latF}/${zoomValue}`;
+        const urlShell = `https://ui-map.shellrecharge.com/api/map/v2/markers/${lngF}/${lngS}/${latF}/${latS}/${zoomValue}`;
 
         const response = await fetch(urlShell, {
             headers: {
                 'Access-Control-Allow-Origin': '*',
             },
-            type: 'GETS',
+            type: 'GET',
             mode: 'cors',
         });
         const dataShell = await response.json();
-
         const rows = await queryApi.collectRows(query);
         const dataProviders = Object.entries(groupBy(rows, '_field'));
 
@@ -103,14 +98,20 @@ app.get('/poles', async (req, res) => {
         console.log(providersUsage);
 
         // Add provider usage to single pole (object) and pole score with that + distance to person
+        let biggestValue = 0;
         dataShell.map((pole) => {
             // Lat -> Lng
-            const from = turf.point([parseFloat(req.query.lat).toFixed(16), parseFloat(req.query.lng).toFixed(16)]);
+            // TODO: Take a look at the turf points
+            const from = turf.point([parseFloat(latF).toFixed(16), parseFloat(lngF).toFixed(16)]);
             const to = turf.point([pole.coordinates.latitude, pole.coordinates.longitude]);
 
             pole.operatorName = changeOperator(pole.operatorName);
             pole['emissions'] = providersUsage[pole.operatorName];
-            pole['score'] = poleScore(pole['emissions']);
+            // For dynamic emissions
+            if (pole['emissions'] >= biggestValue) {
+                biggestValue = pole['emissions'];
+            }
+            pole['score'] = poleScore(pole['emissions'], biggestValue);
             // Defaults to kilometres
             pole['distance'] = turf.distance(from, to);
         });

@@ -19,6 +19,8 @@ const changeOperator = (operatorName) => {
             return 'Oxxio';
         case 'Abel&co':
             return 'GreenCaravan+EasyEnergy';
+        case 'Fastned':
+            return 'PureEnergie';
         default:
             return operatorName;
     }
