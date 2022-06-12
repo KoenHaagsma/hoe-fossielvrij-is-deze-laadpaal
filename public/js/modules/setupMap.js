@@ -110,10 +110,10 @@ function setupMap(position) {
             // Show best pole
             addBestPole(map, data.shift());
 
-            console.log(data.slice(1, maxMarkers).concat(data.slice(-maxMarkers)));
+            // Add all other markers
             addMarkers(map, data.slice(1, maxMarkers).concat(data.slice(-maxMarkers)));
-            // Catch error if area was already searched for and return afterwards
         } catch (error) {
+            // Catch error if area was already searched for and return afterwards
             console.error(error);
             return;
         }
@@ -135,8 +135,15 @@ function setupMap(position) {
             userLocationButton.addEventListener('click', (event) => {
                 event.preventDefault();
 
-                const setPosition = (position) => {
-                    console.log(position);
+                const setPosition = async (position) => {
+                    // TODO: Search for location of user
+                    // TODO: Get place they're in, from mapbox geocoding api
+
+                    const response = await fetch(
+                        `https://api.mapbox.com/geocoding/v5/mapbox.places/${position.coords.longitude},${position.coords.latitude}.json?access_token=${mapboxgl.accessToken}`,
+                    );
+                    const data = await response.json();
+                    console.log(data);
                 };
 
                 const errorLocation = (error) => {
