@@ -21,6 +21,8 @@ const changeOperator = (operatorName) => {
             return 'GreenCaravan+EasyEnergy';
         case 'Fastned':
             return 'PureEnergie';
+        case 'Alfen':
+            return 'GreenCaravan+EasyEnergy';
         default:
             return operatorName;
     }

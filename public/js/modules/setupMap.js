@@ -1,4 +1,7 @@
-import { addToMap } from './addToMap.js';
+import { addMarkers } from './addMarkers.js';
+import { addBestPole } from './addBestPole.js';
+import { addUserLocation } from './addUserLocation.js';
+
 mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2w0OGptdnNoMGQ5dDNrcjJhdzB0NG5wMCJ9.l2fZnsgmtiTsrRW_f28CEQ';
 
 const userLocationButton = document.querySelector('.getUserLocation');
@@ -32,18 +35,28 @@ function setupMap(position) {
     // Geocoder on search and found a location then ->
     geocoder.on('result', async (event) => {
         try {
-            console.log(event.result);
-            const coordinates = {
-                lngF: event.result.bbox[0],
-                lngS: event.result.bbox[2],
-                latF: event.result.bbox[1],
-                latS: event.result.bbox[3],
-            };
+            let coordinates = {};
+            const plusMinus = 0.01;
+
+            if (event.result.bbox === undefined || event.result.bbox === null || !event.result.bbox) {
+                coordinates = {
+                    lngF: event.result.center[0] - plusMinus,
+                    lngS: event.result.center[0] + plusMinus,
+                    latF: event.result.center[1] - plusMinus,
+                    latS: event.result.center[1] + plusMinus,
+                };
+            } else {
+                coordinates = {
+                    lngF: event.result.bbox[0],
+                    lngS: event.result.bbox[2],
+                    latF: event.result.bbox[1],
+                    latS: event.result.bbox[3],
+                };
+            }
             const response = await fetch(
                 `/poles?lngF=${coordinates.lngF}&latF=${coordinates.latF}&lngS=${coordinates.lngS}&latS=${coordinates.latS}`,
             );
             const data = await response.json();
-            if (!data || data === undefined || data.length === 0) return;
 
             // Draw box around searched area
             map.addSource(`searchedregion-${event.result.id}`, {
@@ -91,19 +104,15 @@ function setupMap(position) {
                 },
             });
 
-            // Show best pole
-            const bestPole = data.shift();
-            const HTMLMarkerBest = document.createElement('div');
-            HTMLMarkerBest.className = 'custom-marker-best-pole';
-            const bestMarker = new mapboxgl.Marker(HTMLMarkerBest, {
-                scale: 0.5,
-            })
-                .setLngLat([bestPole.coordinates.longitude, bestPole.coordinates.latitude])
-                .addTo(map);
+            // TODO: Add state for no poles found
+            if (!data || data === undefined || data.length === 0) return;
 
-            console.log(data.slice(0, maxMarkers).concat(data.slice(-maxMarkers)));
-            addToMap(map, data.slice(0, maxMarkers).concat(data.slice(-maxMarkers)));
-        // Catch error if area was already searched for and return afterwards
+            // Show best pole
+            addBestPole(map, data.shift());
+
+            console.log(data.slice(1, maxMarkers).concat(data.slice(-maxMarkers)));
+            addMarkers(map, data.slice(1, maxMarkers).concat(data.slice(-maxMarkers)));
+            // Catch error if area was already searched for and return afterwards
         } catch (error) {
             console.error(error);
             return;
@@ -125,7 +134,34 @@ function setupMap(position) {
 
             userLocationButton.addEventListener('click', (event) => {
                 event.preventDefault();
-                console.log('click');
+
+                const setPosition = (position) => {
+                    console.log(position);
+                };
+
+                const errorLocation = (error) => {
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            console.error('User denied the request for Geolocation.');
+                            break;
+
+                        case error.POSITION_UNAVAILABLE:
+                            console.error('Location information is unavailable.');
+                            break;
+
+                        case error.TIMEOUT:
+                            console.error('The request to get user location timed out.');
+                            break;
+
+                        case error.UNKNOWN_ERROR:
+                            console.error('An unknown error occurred.');
+                            break;
+                    }
+                };
+
+                navigator.geolocation.getCurrentPosition(setPosition, errorLocation, {
+                    enableHighAccuracy: true,
+                });
             });
 
             // const response = await fetch(`/poles?lng=${position.lng}&lat=${position.lat}`);

@@ -69,6 +69,7 @@ app.get('/poles', async (req, res) => {
             |> filter(fn: (r) => r["_measurement"] == "past_providers")
         `;
         const urlShell = `https://ui-map.shellrecharge.com/api/map/v2/markers/${lngF}/${lngS}/${latF}/${latS}/${zoomValue}`;
+        console.log(urlShell);
 
         const response = await fetch(urlShell, {
             headers: {

@@ -1,6 +1,6 @@
 mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2w0OGptdnNoMGQ5dDNrcjJhdzB0NG5wMCJ9.l2fZnsgmtiTsrRW_f28CEQ';
 
-function addToMap(map, data) {
+function addMarkers(map, data) {
     data.map((singleMarker) => {
         const HTMLMarker = document.createElement('div');
         HTMLMarker.className = 'custom-marker';
@@ -23,4 +23,4 @@ function addToMap(map, data) {
     });
 }
 
-export { addToMap };
+export { addMarkers };
