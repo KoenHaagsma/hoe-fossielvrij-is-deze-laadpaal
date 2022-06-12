@@ -7,7 +7,6 @@ const CACHE_FILES = [
     '/css/main.min.css',
     '/js/modules/renderElement.js',
     '/js/sw-register.js',
-    '/socket.io/socket.io.js',
     '/images/icons/Icon-72x72.png',
     '/images/icons/Icon-92x92.png',
     '/images/icons/Icon-96x96.png',
