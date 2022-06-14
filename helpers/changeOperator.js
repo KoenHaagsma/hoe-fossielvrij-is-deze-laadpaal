@@ -20,7 +20,7 @@ const changeOperator = (operatorName) => {
         case 'Abel&co':
             return 'PZEM';
         case 'Fastned':
-            return 'Delta-timeScore';
+            return 'Delta';
         case 'Alfen':
             return 'Essent';
         case 'Joulz\t':
