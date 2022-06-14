@@ -4,6 +4,9 @@ import { renderElementAndClean, renderElement, cleanElement } from './modules/re
 
 const loadedMarkers = [];
 
+if (window.location.pathname === '/') {
+    location.href = '/map';
+}
 if (window.location.pathname === '/map') {
     const mapContainer = document.querySelector('#map');
 
