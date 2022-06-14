@@ -1,6 +1,6 @@
 {
-    "name": "Food-Finder-PWA",
-    "version": "0.0.1",
+    "name": "Fossile Poles",
+    "version": "1.0.0",
     "description": "",
     "main": "app.js",
     "scripts": {
@@ -18,9 +18,9 @@
     "author": "Koen Haagsma",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/KoenHaagsma/Food-Finder-PWA/issues"
+        "url": "https://github.com/KoenHaagsma/hoe-fossielvrij-is-deze-laadpaal/issues"
     },
-    "homepage": "https://github.com/KoenHaagsma/Food-Finder-PWA",
+    "homepage": "https://github.com/KoenHaagsma/hoe-fossielvrij-is-deze-laadpaal",
     "dependencies": {
         "@influxdata/influxdb-client": "^1.26.0",
         "@turf/turf": "^6.5.0",
@@ -30,8 +30,7 @@
         "express": "^4.17.3",
         "node-fetch": "^2.6.7",
         "path": "^0.12.7",
-        "pug": "^3.0.2",
-        "socket.io": "^4.5.1"
+        "pug": "^3.0.2"
     },
     "devDependencies": {
         "minify": "^8.0.4",
