@@ -1,7 +1,6 @@
 const poleScore = (poleScore, maxEmission) => {
     if (poleScore === undefined) return 'ffffff';
-    // const baseValue = 80;
-    const baseValue = maxEmission / 10;
+    const baseValue = 80;
     if (poleScore <= baseValue) {
         return '46BD54';
     } else if (poleScore > baseValue && poleScore <= baseValue * 2) {

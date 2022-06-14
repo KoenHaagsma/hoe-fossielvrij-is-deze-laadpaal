@@ -14,9 +14,9 @@
         cursor: pointer;
         background-repeat: no-repeat;
         background-position: center center;
-        height: 6.625rem;
-        width: 4.25rem;
-        background-image: url(../images/best.svg);
+        height: 6.625rem !important;
+        width: 4.25rem !important;
+        background-image: url(../images/best.svg) !important;
         z-index: 10;
     }
     .custom-marker {
@@ -25,7 +25,7 @@
         background-position: center center;
         height: 2.45rem;
         width: 1.5rem;
-        &.marker-46bd54 {
+        &.marker-46BD54 {
             background-image: url(../images/46bd54.svg);
             z-index: 9;
         }
@@ -45,7 +45,7 @@
             background-image: url(../images/C08337.svg);
             z-index: 5;
         }
-        &.marker-9f522a {
+        &.marker-9F522A {
             background-image: url(../images/9f522a.svg);
             z-index: 4;
         }
@@ -140,6 +140,13 @@
         border: none;
         cursor: pointer;
     }
+}
+
+.slider {
+    position: absolute;
+    bottom: 8rem;
+    right: 0;
+    margin-right: 1rem;
 }
 
 .buttomMenu {

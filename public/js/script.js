@@ -1,5 +1,8 @@
-import { setupMap } from './modules/setupMap.js';
+import { setupMap } from './modules/mapbox/setupMap.js';
+import { timeSlider } from './modules/timeSlider.js';
 import { renderElementAndClean, renderElement, cleanElement } from './modules/renderElement.js';
+
+const loadedMarkers = [];
 
 if (window.location.pathname === '/map') {
     const mapContainer = document.querySelector('#map');

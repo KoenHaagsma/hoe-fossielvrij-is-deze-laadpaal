@@ -44,7 +44,7 @@ app.get('/offline', (req, res) => {
     res.render('offline');
 });
 
-app.get('/map', (req, res) => {
+app.get('/map', async (req, res) => {
     res.render('map');
 });
 
@@ -65,11 +65,10 @@ app.get('/poles', async (req, res) => {
 
         const query = `
         from(bucket: "providers")
-            |> range(start: -28h, stop: -24h)
+            |> range(start: -49h, stop: -24h)
             |> filter(fn: (r) => r["_measurement"] == "past_providers")
         `;
         const urlShell = `https://ui-map.shellrecharge.com/api/map/v2/markers/${lngF}/${lngS}/${latF}/${latS}/${zoomValue}`;
-        console.log(urlShell);
 
         const response = await fetch(urlShell, {
             headers: {
@@ -85,24 +84,23 @@ app.get('/poles', async (req, res) => {
         // Calculate average CO2/kwh per provider
         let providersUsage = {};
         for (provider in dataProviders) {
-            let count = 0;
-            let providerUsage = 0;
+            const futureDataScore = [];
+            const futureData = [];
 
-            dataProviders[provider][1].forEach((timeRange) => {
-                providerUsage += timeRange._value;
-                count++;
-            });
+            for (prov in dataProviders[provider][1]) {
+                futureDataScore.push(poleScore(dataProviders[provider][1][prov]._value));
+                futureData.push(dataProviders[provider][1][prov]._value);
+            }
 
-            providersUsage[dataProviders[provider][0]] = providerUsage / count;
+            providersUsage[dataProviders[provider][0]] = dataProviders[provider][1][0]._value;
+            providersUsage[`${dataProviders[provider][0]}-timeFrame`] = futureDataScore;
+            providersUsage[`${dataProviders[provider][0]}-timeScore`] = futureData;
         }
-
-        console.log(providersUsage);
 
         // Add provider usage to single pole (object) and pole score with that + distance to person
         let biggestValue = 0;
         dataShell.map((pole) => {
             // Lat -> Lng
-            // TODO: Take a look at the turf points
             const from = turf.point([parseFloat(latF).toFixed(16), parseFloat(lngF).toFixed(16)]);
             const to = turf.point([pole.coordinates.latitude, pole.coordinates.longitude]);
 
@@ -115,6 +113,8 @@ app.get('/poles', async (req, res) => {
             pole['score'] = poleScore(pole['emissions'], biggestValue);
             // Defaults to kilometres
             pole['distance'] = turf.distance(from, to);
+            pole['timeFrame'] = providersUsage[`${pole.operatorName}-timeFrame`];
+            pole['timeFrameScore'] = providersUsage[`${pole.operatorName}-timeScore`];
         });
 
         // Sort based on emissions and then on distance

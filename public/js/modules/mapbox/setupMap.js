@@ -1,13 +1,14 @@
 import { addMarkers } from './addMarkers.js';
 import { addBestPole } from './addBestPole.js';
 import { addUserLocation } from './addUserLocation.js';
+import { drawRegion } from './drawRegion.js';
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2w0OGptdnNoMGQ5dDNrcjJhdzB0NG5wMCJ9.l2fZnsgmtiTsrRW_f28CEQ';
 
 const userLocationButton = document.querySelector('.getUserLocation');
 const bottomMenu = document.querySelector('.buttomMenu');
 const zoom = 8;
-const maxMarkerValue = 50;
+const maxMarkerValue = 36;
 // Divided by two because markers are picked from front of array and back of array
 const maxMarkers = maxMarkerValue / 2;
 let location;
@@ -21,7 +22,6 @@ function setupMap(position) {
         zoom: zoom,
     });
 
-    // Add geocoder to map (Location finder)
     const geocoder = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
         placeholder: 'Zoek naar een plaats',
@@ -34,6 +34,7 @@ function setupMap(position) {
 
     // Geocoder on search and found a location then ->
     geocoder.on('result', async (event) => {
+        // Add geocoder to map (Location finder)
         try {
             let coordinates = {};
             const plusMinus = 0.01;
@@ -58,60 +59,13 @@ function setupMap(position) {
             );
             const data = await response.json();
 
-            // Draw box around searched area
-            map.addSource(`searchedregion-${event.result.id}`, {
-                type: 'geojson',
-                data: {
-                    type: 'Feature',
-                    geometry: {
-                        type: 'Polygon',
-                        // These coordinates outline searched destination
-                        // Top left, Top right, Bottom right, Bottom left, Top Left.
-                        coordinates: [
-                            [
-                                [coordinates.lngF, coordinates.latS],
-                                [coordinates.lngS, coordinates.latS],
-                                [coordinates.lngS, coordinates.latF],
-                                [coordinates.lngF, coordinates.latF],
-                                [coordinates.lngF, coordinates.latS],
-                            ],
-                        ],
-                    },
-                },
-            });
-
-            // Fill the polygon area
-            map.addLayer({
-                id: `searchedregion-${event.result.id}`,
-                type: 'fill',
-                source: `searchedregion-${event.result.id}`,
-                layout: {},
-                paint: {
-                    'fill-color': '#46BD54',
-                    'fill-opacity': 0.25,
-                },
-            });
-
-            // Add a outline around the polygon area
-            map.addLayer({
-                id: `outline-${event.result.id}`,
-                type: 'line',
-                source: `searchedregion-${event.result.id}`,
-                layout: {},
-                paint: {
-                    'line-color': '#46BD54',
-                    'line-width': 1,
-                },
-            });
+            drawRegion(map, coordinates, event.result.id);
 
             // TODO: Add state for no poles found
             if (!data || data === undefined || data.length === 0) return;
 
-            // Show best pole
-            addBestPole(map, data.shift());
-
             // Add all other markers
-            addMarkers(map, data.slice(1, maxMarkers).concat(data.slice(-maxMarkers)));
+            addMarkers(map, data);
         } catch (error) {
             // Catch error if area was already searched for and return afterwards
             console.error(error);
@@ -136,14 +90,33 @@ function setupMap(position) {
                 event.preventDefault();
 
                 const setPosition = async (position) => {
-                    // TODO: Search for location of user
-                    // TODO: Get place they're in, from mapbox geocoding api
+                    const center = [position.coords.longitude, position.coords.latitude];
+
+                    map.flyTo({
+                        center: center,
+                        essential: true,
+                        zoom: zoom * 1.45,
+                    });
+
+                    addUserLocation(map, center);
+
+                    let coordinates = {
+                        lngF: position.coords.longitude - 0.01,
+                        lngS: position.coords.longitude + 0.01,
+                        latF: position.coords.latitude - 0.01,
+                        latS: position.coords.latitude + 0.01,
+                    };
+
+                    let id = coordinates.lngF + coordinates.latF;
+
+                    drawRegion(map, coordinates, id);
 
                     const response = await fetch(
-                        `https://api.mapbox.com/geocoding/v5/mapbox.places/${position.coords.longitude},${position.coords.latitude}.json?access_token=${mapboxgl.accessToken}`,
+                        `/poles?lngF=${coordinates.lngF}&latF=${coordinates.latF}&lngS=${coordinates.lngS}&latS=${coordinates.latS}`,
                     );
                     const data = await response.json();
-                    console.log(data);
+
+                    addMarkers(map, data);
                 };
 
                 const errorLocation = (error) => {
@@ -185,13 +158,6 @@ function setupMap(position) {
             //     .addTo(map);
 
             // // Show personal position
-            // const HTMLMarkerPersonal = document.createElement('div');
-            // HTMLMarkerPersonal.className = 'custom-marker-personal';
-            // const personalMarker = new mapboxgl.Marker(HTMLMarkerPersonal, {
-            //     scale: 0.5,
-            // })
-            //     .setLngLat([position.lng, position.lat])
-            //     .addTo(map);
 
             // // Draw line between person and best pole
             // // Add line to map
