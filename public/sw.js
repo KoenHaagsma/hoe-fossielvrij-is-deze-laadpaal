@@ -1,7 +1,8 @@
-const STATIC_CACHE_NAME = 'site-static-v1.0.22';
-const DYNAMIC_CACHE_NAME = 'site-dynamic-v1.0.20';
+const STATIC_CACHE_NAME = 'site-static-v1.1.0';
+const DYNAMIC_CACHE_NAME = 'site-dynamic-v1.1.0';
 const CACHE_FILES = [
     '/',
+    '/map',
     '/offline',
     '/manifest.json',
     '/css/main.min.css',
