@@ -1,5 +1,5 @@
-const STATIC_CACHE_NAME = 'site-static-v1.0.20';
-const DYNAMIC_CACHE_NAME = 'site-dynamic-v1.0.18';
+const STATIC_CACHE_NAME = 'site-static-v1.0.21';
+const DYNAMIC_CACHE_NAME = 'site-dynamic-v1.0.19';
 const CACHE_FILES = [
     '/',
     '/offline',
