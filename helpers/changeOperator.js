@@ -45,6 +45,8 @@ const changeOperator = (operatorName) => {
             return 'EasyEnergy';
         case 'LastMileSolutions':
             return 'Engie';
+        case 'EVnetNL':
+            return 'Oxxio';
         default:
             return operatorName;
     }
