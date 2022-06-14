@@ -30,8 +30,6 @@ function addMarkers(map, data) {
             console.log('click marker');
         });
     });
-
-    timeSlider(map, document.querySelectorAll('.custom-marker'));
 }
 
 export { addMarkers };

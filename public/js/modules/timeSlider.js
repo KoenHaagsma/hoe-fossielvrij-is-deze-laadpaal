@@ -1,44 +1,52 @@
-function timeSlider(map, markers) {
+function timeSlider(map) {
     const slider = document.querySelector('#time');
-    const sources = map.getStyle().sources;
-    // https://stackoverflow.com/a/53443378
-    const filteredSources = (({ composite, ...o }) => o)(sources);
-    slider.removeEventListener('input', event);
+    try {
+        let markers = document.querySelectorAll('.custom-marker');
+        const sources = map.getStyle().sources;
+        // https://stackoverflow.com/a/53443378
+        const filteredSources = (({ composite, ...o }) => o)(sources);
+        let bestPoles = document.querySelectorAll('.custom-marker-best-pole');
+        const bestPolesArray = [];
 
-    slider.addEventListener('input', (event) => {
-        event.preventDefault();
-        const bestPoles = document.querySelectorAll('.custom-marker-best-pole');
         bestPoles.forEach((pole) => {
-            console.log(pole);
             pole.classList.replace(pole.classList[1], pole.markerTimeFrame[slider.value]);
         });
 
-        for (const [key, value] of Object.entries(filteredSources)) {
+        const filteredArray = Object.entries(filteredSources);
+
+        filteredArray.forEach((source) => {
+            let markersInPolygon = [];
             let bestMarkerScore = 720;
             let bestPole;
-            let markersInPolygon = [];
 
-            const polygonValues = value.data.geometry.coordinates;
+            const polygonValues = source[1].data.geometry.coordinates;
             const polygon = turf.polygon([polygonValues[0]]);
+            const markersArray = [...markers];
 
-            markers.forEach((marker) => {
+            markersArray.forEach((marker) => {
                 const point = turf.point([marker.coordinates[0], marker.coordinates[1]]);
                 const ifIsInPolygon = turf.booleanPointInPolygon(point, polygon);
                 if (!ifIsInPolygon) return;
                 markersInPolygon.push(marker);
             });
 
-            markersInPolygon.forEach((markers) => {
-                if (markers.markerTimeScore[slider.value] < bestMarkerScore) {
-                    bestMarkerScore = markers.markerTimeScore[slider.value];
-                    bestPole = markers;
+            markersInPolygon.forEach((marker) => {
+                if (marker.markerTimeScore[slider.value] < bestMarkerScore) {
+                    bestMarkerScore = marker.markerTimeScore[slider.value];
+                    bestPole = marker;
                 }
-                markers.classList.replace(markers.classList[1], `marker-${markers.markerTimeFrame[slider.value]}`);
+                marker.classList.replace(marker.classList[1], `marker-${marker.markerTimeFrame[slider.value]}`);
             });
+            bestPolesArray.push(bestPole);
+        });
 
+        bestPolesArray.forEach((bestPole) => {
             bestPole.classList.replace(bestPole.classList[1], 'custom-marker-best-pole');
-        }
-    });
+        });
+    } catch (error) {
+        console.error(error);
+        return;
+    }
 }
 
 export { timeSlider };

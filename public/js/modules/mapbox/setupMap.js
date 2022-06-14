@@ -2,15 +2,16 @@ import { addMarkers } from './addMarkers.js';
 import { addBestPole } from './addBestPole.js';
 import { addUserLocation } from './addUserLocation.js';
 import { drawRegion } from './drawRegion.js';
+import { timeSlider } from '../timeSlider.js';
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2w0OGptdnNoMGQ5dDNrcjJhdzB0NG5wMCJ9.l2fZnsgmtiTsrRW_f28CEQ';
 
 const userLocationButton = document.querySelector('.getUserLocation');
 const bottomMenu = document.querySelector('.buttomMenu');
 const zoom = 8;
-const maxMarkerValue = 36;
+const maxMarkerValue = 50;
 // Divided by two because markers are picked from front of array and back of array
-const maxMarkers = maxMarkerValue / 2;
+const maxMarkers = maxMarkerValue;
 let location;
 
 function setupMap(position) {
@@ -65,10 +66,11 @@ function setupMap(position) {
             if (!data || data === undefined || data.length === 0) return;
 
             // Add all other markers
-            addMarkers(map, data);
+            addMarkers(map, data.slice(0, maxMarkers));
         } catch (error) {
             // Catch error if area was already searched for and return afterwards
             console.error(error);
+
             return;
         }
     });
@@ -76,10 +78,16 @@ function setupMap(position) {
     map.on('load', async () => {
         try {
             const bigListButton = document.querySelector('.listButton');
+            const slider = document.querySelector('.slider');
             userLocationButton.style.display = 'flex';
             bottomMenu.style.display = 'flex';
 
             map.addControl(geocoder);
+
+            slider.addEventListener('input', (event) => {
+                event.preventDefault();
+                timeSlider(map);
+            });
 
             bigListButton.addEventListener('click', (event) => {
                 event.preventDefault();
@@ -116,7 +124,7 @@ function setupMap(position) {
                     );
                     const data = await response.json();
 
-                    addMarkers(map, data);
+                    addMarkers(map, data.slice(0, maxMarkers));
                 };
 
                 const errorLocation = (error) => {

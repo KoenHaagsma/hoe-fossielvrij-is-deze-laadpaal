@@ -6,11 +6,11 @@ const changeOperator = (operatorName) => {
         case 'NL-EVB':
             return 'Engie';
         case 'Allego':
-            return 'PureEnergie';
+            return 'DVEP_Energie';
         case 'EV-Box':
             return 'Om_nieuwe_energie';
         case 'Community by Shell Recharge':
-            return 'PureEnergie';
+            return 'DVEP_Energie';
         case 'LastMileSolutions':
             return 'NLE';
         case 'Blue Current':
@@ -18,13 +18,27 @@ const changeOperator = (operatorName) => {
         case 'E-Flux':
             return 'Oxxio';
         case 'Abel&co':
-            return 'GreenCaravan+EasyEnergy';
+            return 'LastMileSolutions';
         case 'Fastned':
-            return 'PureEnergie';
+            return 'Delta-timeScore';
         case 'Alfen':
-            return 'GreenCaravan+EasyEnergy';
+            return 'LastMileSolutions';
         case 'Joulz\t':
-            return 'GreenCaravan+EasyEnergy';
+            return 'Oxxio';
+        case undefined:
+            return 'Essent';
+        case 'Allego - Groningen and Drenthe':
+            return 'DVEP_Energie';
+        case 'Shell Recharge':
+            return 'DVEP_Energie';
+        case 'Just Plugin':
+            return 'LastMileSolutions';
+        case 'Engie':
+            return 'Engie';
+        case 'ConnectNed':
+            return 'Oxxio';
+        case 'AVIA Netherlands':
+            return 'NLE';
         default:
             return operatorName;
     }
