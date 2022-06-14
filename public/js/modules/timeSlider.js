@@ -1,5 +1,14 @@
 function timeSlider(map) {
     const slider = document.querySelector('#time');
+    const time = document.querySelector('.timeP');
+    const timeNow = new Date().getHours();
+
+    let timeFuture = parseInt(timeNow) + parseInt(slider.value);
+    if (timeFuture > 24) {
+        timeFuture -= 25;
+    }
+    time.innerText = `${timeFuture}:00`;
+
     try {
         let markers = document.querySelectorAll('.custom-marker');
         const sources = map.getStyle().sources;

@@ -27,6 +27,11 @@ function setupMap(position) {
         accessToken: mapboxgl.accessToken,
         placeholder: 'Zoek naar een plaats',
         mapboxgl: mapboxgl,
+        bbox: [3.31497114423, 50.803721015, 7.09205325687, 53.5104033474],
+        proximity: {
+            longitude: 3.31497114423,
+            latitude: 53.5104033474,
+        },
         marker: false,
         flyTo: {
             zoom: zoom * 1.45,
@@ -66,7 +71,7 @@ function setupMap(position) {
             if (!data || data === undefined || data.length === 0) return;
 
             // Add all other markers
-            addMarkers(map, data.slice(0, maxMarkers));
+            addMarkers(map, data.slice(0, maxMarkers).concat(data.slice(-maxMarkers)));
         } catch (error) {
             // Catch error if area was already searched for and return afterwards
             console.error(error);
@@ -124,7 +129,7 @@ function setupMap(position) {
                     );
                     const data = await response.json();
 
-                    addMarkers(map, data.slice(0, maxMarkers));
+                    addMarkers(map, data.slice(0, maxMarkers).concat(data.slice(-maxMarkers)));
                 };
 
                 const errorLocation = (error) => {

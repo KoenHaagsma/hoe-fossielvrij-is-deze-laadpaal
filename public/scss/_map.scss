@@ -144,9 +144,24 @@
 
 .slider {
     position: absolute;
+    display: flex;
     bottom: 8rem;
     right: 0;
     margin-right: 1rem;
+    transition: all 0.35s;
+    z-index: 25;
+    p {
+        padding: 0.25rem;
+        background-color: white;
+        border-radius: 5px;
+        &:first-of-type {
+            margin-right: 0.5rem;
+        }
+    }
+    &.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
 }
 
 .buttomMenu {

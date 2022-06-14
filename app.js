@@ -45,7 +45,7 @@ app.get('/offline', (req, res) => {
 });
 
 app.get('/map', async (req, res) => {
-    res.render('map');
+    res.render('map', { date: new Date().getHours() });
 });
 
 app.get('/list', (req, res) => {
