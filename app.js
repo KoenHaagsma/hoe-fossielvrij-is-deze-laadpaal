@@ -97,8 +97,6 @@ app.get('/poles', async (req, res) => {
             providersUsage[`${dataProviders[provider][0]}-timeScore`] = futureData;
         }
 
-        console.log(providersUsage);
-
         // Add provider usage to single pole (object) and pole score with that + distance to person
         let biggestValue = 0;
         dataShell.map((pole) => {
