@@ -1,5 +1,4 @@
 import { addMarkers } from './addMarkers.js';
-import { addBestPole } from './addBestPole.js';
 import { addUserLocation } from './addUserLocation.js';
 import { drawRegion } from './drawRegion.js';
 import { timeSlider } from '../timeSlider.js';

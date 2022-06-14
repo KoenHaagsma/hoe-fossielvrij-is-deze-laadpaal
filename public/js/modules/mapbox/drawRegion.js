@@ -6,7 +6,6 @@ function drawRegion(map, coordinates, id) {
             type: 'Feature',
             geometry: {
                 type: 'Polygon',
-                // These coordinates outline searched destination
                 // Top left, Top right, Bottom right, Bottom left, Top Left.
                 coordinates: [
                     [

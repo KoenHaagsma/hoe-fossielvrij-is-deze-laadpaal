@@ -1,6 +1,3 @@
-// mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2w0OGptdnNoMGQ5dDNrcjJhdzB0NG5wMCJ9.l2fZnsgmtiTsrRW_f28CEQ';
-
-import { timeSlider } from '../timeSlider.js';
 import { addBestPole } from './addBestPole.js';
 
 function addMarkers(map, data) {
