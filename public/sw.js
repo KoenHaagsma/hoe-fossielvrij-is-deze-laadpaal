@@ -1,5 +1,5 @@
-const STATIC_CACHE_NAME = 'site-static-v1.0.21';
-const DYNAMIC_CACHE_NAME = 'site-dynamic-v1.0.19';
+const STATIC_CACHE_NAME = 'site-static-v1.0.22';
+const DYNAMIC_CACHE_NAME = 'site-dynamic-v1.0.20';
 const CACHE_FILES = [
     '/',
     '/offline',
@@ -7,15 +7,20 @@ const CACHE_FILES = [
     '/css/main.min.css',
     '/js/modules/renderElement.js',
     '/js/sw-register.js',
-    '/images/icons/Icon-72x72.png',
-    '/images/icons/Icon-92x92.png',
-    '/images/icons/Icon-96x96.png',
-    '/images/icons/Icon-128x128.png',
-    '/images/icons/Icon-144x144.png',
-    '/images/icons/Icon-152x152.png',
-    '/images/icons/Icon-192x192.png',
-    '/images/icons/Icon-384x384.png',
-    '/images/icons/Icon-512x512.png',
+    '/images/000000.svg',
+    '/images/9F522A.svg',
+    '/images/46BD54.svg',
+    '/images/251304.svg',
+    '/images/733519.svg',
+    '/images/best.svg',
+    '/images/C7D751.svg',
+    '/images/C08337.svg',
+    '/images/D3A940.svg',
+    '/images/EAD649.svg',
+    '/images/FFFFFF.svg',
+    '/images/ListButton.svg',
+    '/images/Personal.svg',
+    '/images/search.svg',
 ];
 
 // Install service worker
