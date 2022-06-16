@@ -1,4 +1,5 @@
 import { addBestPole } from './addBestPole.js';
+import { renderElementAndClean, renderElement, cleanElement } from '../renderElement.js';
 
 function addMarkers(map, data) {
     const slider = document.querySelector('.slider');
@@ -6,8 +7,8 @@ function addMarkers(map, data) {
     // Show best pole
     addBestPole(map, data[0]);
 
-    data.map((singleMarker) => {
-        console.log(singleMarker);
+    data.map((singleMarker, index) => {
+        if (index === 0) return;
         const HTMLMarker = document.createElement('div');
         HTMLMarker.className = 'custom-marker';
         HTMLMarker.classList.add(`marker-${singleMarker.score}`);
@@ -31,6 +32,42 @@ function addMarkers(map, data) {
             event.preventDefault();
             console.log('click marker');
         });
+
+        const allMarkers = document.querySelectorAll('.custom-marker');
+        const allMarkersArray = [...allMarkers];
+        const maxPolesList = 11;
+        let bestPoles = [];
+
+        if (allMarkersArray.length < maxPolesList) {
+            bestPoles = allMarkersArray;
+        } else {
+            bestPoles = allMarkersArray.slice(1, maxPolesList);
+        }
+
+        const listContainer = document.querySelector('.list-container');
+        listContainer.classList.remove('disabled');
+        const slider = document.querySelector('#time');
+
+        const HTML = `
+        <ol>
+            ${bestPoles
+                .map(
+                    (bestPole, index) =>
+                        `<li class='${index} marker-${bestPole.markerTimeFrame[slider.value]}'>
+                            <section><p>${index + 1}.</p><p>Laadpaal - ${bestPole.provider}</p></section>
+                            <section><p>Nu: <div class="power-${
+                                bestPole.markerTimeFrame[slider.value]
+                            }"></div></p></section>
+                            <section><a target="_blank" href="http://www.google.com/maps/place/${
+                                bestPole.coordinates[1]
+                            },${bestPole.coordinates[0]}">Navigeer naar paal</a></section>
+                        </li>`,
+                )
+                .join('\n ')}
+        </ol>
+        `;
+
+        renderElementAndClean(listContainer, HTML, 'afterbegin');
     });
 }
 

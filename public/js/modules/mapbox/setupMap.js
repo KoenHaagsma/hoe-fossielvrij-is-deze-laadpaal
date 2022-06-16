@@ -2,7 +2,8 @@ import { addMarkers } from './addMarkers.js';
 import { addUserLocation } from './addUserLocation.js';
 import { drawRegion } from './drawRegion.js';
 import { timeSlider } from '../timeSlider.js';
-import { renderElementAndClean, renderElement, cleanElement } from '../renderElement.js';
+import { poleList } from '../poleList.js';
+import { CONFIG } from '../config/flashMessageConfig.js';
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2w0OGptdnNoMGQ5dDNrcjJhdzB0NG5wMCJ9.l2fZnsgmtiTsrRW_f28CEQ';
 
@@ -12,7 +13,6 @@ const zoom = 8;
 const maxMarkerValue = 10;
 //// Divided by two because markers are picked from front of array and back of array
 const maxMarkers = maxMarkerValue;
-let location;
 
 function setupMap(position) {
     // Add map to map container
@@ -71,7 +71,7 @@ function setupMap(position) {
             if (!data || data === undefined || data.length === 0) return;
 
             // Add all other markers
-            addMarkers(map, data.slice(0, maxMarkers).concat(data.slice(-maxMarkers)));
+            addMarkers(map, data.slice(0, maxMarkers));
         } catch (error) {
             // Catch error if area was already searched for and return afterwards
             console.error(error);
@@ -81,8 +81,9 @@ function setupMap(position) {
 
     map.on('load', async () => {
         try {
-            const bigListButton = document.querySelector('.listButton');
+            const bigListButton = document.querySelector('.openMenu ');
             const slider = document.querySelector('.slider');
+            let clicked = 1;
             userLocationButton.style.display = 'flex';
             bottomMenu.style.display = 'flex';
 
@@ -96,65 +97,12 @@ function setupMap(position) {
             bigListButton.addEventListener('click', (event) => {
                 event.preventDefault();
                 const allMarkers = document.querySelectorAll('.custom-marker');
-                if (!allMarkers) return;
-
-                const allMarkersArray = [...allMarkers];
-                const maxPolesList = 11;
-                let bestPoles = [];
-
-                if (allMarkersArray.length < maxPolesList) {
-                    bestPoles = allMarkersArray;
-                } else {
-                    bestPoles = allMarkersArray.slice(1, maxPolesList);
+                if (allMarkers.length === 0) {
+                    window.FlashMessage.warning('Voeg eerst laadpalen toe voordat je de lijst kan bekijken', CONFIG);
+                    return;
                 }
-                bestPoles.forEach((pole) => {
-                    pole.classList.remove('focused');
-                });
-
-                const listContainer = document.querySelector('.list-container');
-                listContainer.classList.remove('disabled');
-                const slider = document.querySelector('#time');
-                const HTML = `
-                <ol>
-                    ${bestPoles
-                        .map(
-                            (bestPole, index) =>
-                                `<li class='${index} marker-${bestPole.markerTimeFrame[slider.value]}'>${
-                                    bestPole.provider
-                                }</li>`,
-                        )
-                        .join('\n ')}
-                </ol>
-                `;
-
-                renderElementAndClean(listContainer, HTML, 'afterbegin');
-                bigListButton.classList.toggle('extended');
-                slider.classList.toggle('extended');
-
-                // Intersection observer to let the map go to the point that is being hovered in the list.
-                const IOOPTIONS = {
-                    threshold: 1.0,
-                };
-
-                let observer = new IntersectionObserver((entries) => {
-                    entries.forEach((entry) => {
-                        if (!entry.isIntersecting) return;
-                        const index = entry.target.classList[0];
-                        map.flyTo({
-                            center: bestPoles[index].coordinates,
-                            essential: true,
-                            zoom: zoom * 1.75,
-                        });
-                        bestPoles.forEach((pole) => {
-                            pole.classList.remove('focused');
-                        });
-                        bestPoles[index].classList.add('focused');
-                    });
-                }, IOOPTIONS);
-                let targets = document.querySelectorAll('.list-container > ol li');
-                targets.forEach((target) => {
-                    observer.observe(target);
-                });
+                clicked++;
+                poleList(map, clicked, zoom, allMarkers);
             });
 
             userLocationButton.addEventListener('click', (event) => {
@@ -187,7 +135,7 @@ function setupMap(position) {
                     );
                     const data = await response.json();
 
-                    addMarkers(map, data.slice(0, maxMarkers).concat(data.slice(-maxMarkers)));
+                    addMarkers(map, data.slice(0, maxMarkers));
                 };
 
                 const errorLocation = (error) => {
