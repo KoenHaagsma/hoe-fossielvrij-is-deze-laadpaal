@@ -20,29 +20,29 @@ function drawRegion(map, coordinates, id) {
         },
     });
 
-    // Fill the polygon area
-    map.addLayer({
-        id: `searchedregion-${id}`,
-        type: 'fill',
-        source: `searchedregion-${id}`,
-        layout: {},
-        paint: {
-            'fill-color': '#46BD54',
-            'fill-opacity': 0.25,
-        },
-    });
+    // // Fill the polygon area
+    // map.addLayer({
+    //     id: `searchedregion-${id}`,
+    //     type: 'fill',
+    //     source: `searchedregion-${id}`,
+    //     layout: {},
+    //     paint: {
+    //         'fill-color': '#46BD54',
+    //         'fill-opacity': 0.25,
+    //     },
+    // });
 
-    // Add a outline around the polygon area
-    map.addLayer({
-        id: `outline-${id}`,
-        type: 'line',
-        source: `searchedregion-${id}`,
-        layout: {},
-        paint: {
-            'line-color': '#46BD54',
-            'line-width': 1,
-        },
-    });
+    // // Add a outline around the polygon area
+    // map.addLayer({
+    //     id: `outline-${id}`,
+    //     type: 'line',
+    //     source: `searchedregion-${id}`,
+    //     layout: {},
+    //     paint: {
+    //         'line-color': '#46BD54',
+    //         'line-width': 1,
+    //     },
+    // });
 }
 
 export { drawRegion };

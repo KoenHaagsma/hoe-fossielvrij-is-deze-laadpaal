@@ -5,6 +5,8 @@ function addBestPole(map, bestPole) {
     HTMLMarker['markerTimeFrame'] = bestPole.timeFrame;
     HTMLMarker['markerTimeScore'] = bestPole.timeFrameScore;
     HTMLMarker['coordinates'] = [bestPole.coordinates.longitude, bestPole.coordinates.latitude];
+    HTMLMarker['provider'] = bestPole.operatorName;
+    HTMLMarker['status'] = bestPole.status;
 
     const bestMarker = new mapboxgl.Marker(HTMLMarker, {
         scale: 0.5,

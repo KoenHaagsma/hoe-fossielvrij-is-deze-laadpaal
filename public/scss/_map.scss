@@ -25,6 +25,13 @@
         background-position: center center;
         height: 2.45rem;
         width: 1.5rem;
+        transition: height 0.25s;
+        transition: width 0.25s;
+        &.focused {
+            height: calc(2.45rem * 1.35);
+            width: calc(1.5rem * 1.35);
+            background-size: cover;
+        }
         &.marker-46BD54 {
             background-image: url(../images/46BD54.svg);
             z-index: 9;
@@ -162,6 +169,9 @@
         pointer-events: none;
         opacity: 0.5;
     }
+    &.extended {
+        bottom: 16rem;
+    }
 }
 
 .buttomMenu {
@@ -189,9 +199,81 @@
         width: 100%;
         background-color: white;
         border-radius: 20px 20px 0 0;
+        transition: all 0.35s;
+        &.extended {
+            height: 200% !important;
+        }
         .content {
             color: black !important;
             font-size: 1rem !important;
+        }
+        .list-container {
+            overflow-x: scroll;
+            width: 100%;
+            scroll-snap-type: x mandatory;
+            &.disabled {
+                overflow-x: hidden;
+            }
+            ol {
+                display: flex;
+                width: fit-content;
+                padding: 0 1rem 1rem;
+                list-style-type: none;
+
+                li {
+                    scroll-snap-align: center;
+                    position: relative;
+                    padding: 1rem;
+                    margin: 1rem;
+                    border: 2px;
+                    border-radius: 10px;
+                    border-style: solid;
+                    width: calc(100vw - 8rem);
+                    flex: none;
+                    text-align: center;
+                    &:nth-of-type(1) {
+                        color: white;
+                        background-color: #46bd54;
+                        border-color: #46bd54 !important;
+                    }
+                    &:nth-of-type(2) {
+                        border-color: silver !important;
+                    }
+                    &:nth-of-type(3) {
+                        border-color: brown !important;
+                    }
+                    &.marker-46BD54 {
+                        border-color: #46bd54;
+                    }
+                    &.marker-C7D751 {
+                        border-color: #c7d751;
+                    }
+                    &.marker-EAD649 {
+                        border-color: #ead649;
+                    }
+                    &.marker-D3A940 {
+                        border-color: #d3a940;
+                    }
+                    &.marker-C08337 {
+                        border-color: #c08337;
+                    }
+                    &.marker-9F522A {
+                        border-color: #9f522a;
+                    }
+                    &.marker-733519 {
+                        border-color: #733519;
+                    }
+                    &.marker-251304 {
+                        border-color: #251304;
+                    }
+                    &.marker-000000 {
+                        border-color: #000000;
+                    }
+                    &.marker-ffffff {
+                        border-color: #ffffff;
+                    }
+                }
+            }
         }
     }
 }
