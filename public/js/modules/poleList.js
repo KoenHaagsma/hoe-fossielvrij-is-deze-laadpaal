@@ -13,18 +13,22 @@ function poleList(map, clicked, zoom, allMarkers) {
     }
 
     const allMarkersArray = [...allMarkers];
-    const maxPolesList = 11;
     let bestPoles = [];
 
+    const regionValue = parseInt(document.querySelector('#region').value);
     allMarkers.forEach((marker) => {
         marker.classList.remove('focused');
     });
 
-    if (allMarkersArray.length < maxPolesList) {
-        bestPoles = allMarkersArray;
-    } else {
-        bestPoles = allMarkersArray.slice(1, maxPolesList);
-    }
+    bestPoles = allMarkersArray.slice(
+        regionValue === 1 ? regionValue - 1 : (regionValue - 1) * 10,
+        allMarkersArray.length,
+    );
+
+    const regionInput = document.querySelector('#region');
+    regionInput.addEventListener('input', () => {
+        console.log(regionValue);
+    });
 
     const listContainer = document.querySelector('.list-container');
     listContainer.classList.remove('disabled');
@@ -41,6 +45,7 @@ function poleList(map, clicked, zoom, allMarkers) {
 
     let observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
+            console.log(entry);
             if (!entry.isIntersecting) return;
             const index = entry.target.classList[0];
             map.flyTo({
@@ -60,10 +65,12 @@ function poleList(map, clicked, zoom, allMarkers) {
         targets.forEach((target) => {
             observer.unobserve(target);
         });
+        console.log('unobserved');
     } else {
         targets.forEach((target) => {
             observer.observe(target);
         });
+        console.log('observed');
     }
 }
 

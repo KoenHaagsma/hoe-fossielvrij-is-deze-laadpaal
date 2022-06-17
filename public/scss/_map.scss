@@ -256,6 +256,9 @@
         .region {
             margin-top: 2rem;
             padding-left: 2rem;
+            &.disabled {
+                display: none;
+            }
             span {
                 padding: 0.25rem;
             }

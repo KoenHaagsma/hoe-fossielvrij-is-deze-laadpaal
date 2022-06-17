@@ -2,7 +2,6 @@ import { addBestPole } from './addBestPole.js';
 import { renderElementAndClean, renderElement, cleanElement } from '../renderElement.js';
 
 let clicked = 1;
-const zoom = 8;
 
 function addMarkers(map, data) {
     const slider = document.querySelector('.slider');
@@ -40,19 +39,18 @@ function addMarkers(map, data) {
     const sources = map.getStyle().sources;
     // https://stackoverflow.com/a/53443378
     const filteredSources = (({ composite, ...o }) => o)(sources);
-    const sourcesButtons = document.querySelector('.region');
     console.log(filteredSources);
     if (Object.entries(filteredSources).length === 1 || Object.entries(filteredSources).length === 0) {
         const allMarkers = document.querySelectorAll('.custom-marker');
         const allMarkersArray = [...allMarkers];
-        const maxPolesList = 11;
         let bestPoles = [];
+        const regionValue = parseInt(document.querySelector('#region').value);
+        const regionContainer = document.querySelector('.region');
 
-        if (allMarkersArray.length < maxPolesList) {
-            bestPoles = allMarkersArray;
-        } else {
-            bestPoles = allMarkersArray.slice(1, maxPolesList);
-        }
+        bestPoles = allMarkersArray.slice(
+            regionValue === 1 ? regionValue - 1 : (regionValue - 1) * 10,
+            allMarkersArray.length,
+        );
 
         const listContainer = document.querySelector('.list-container');
         listContainer.classList.remove('disabled');
@@ -77,6 +75,7 @@ function addMarkers(map, data) {
         </ol>
         `;
 
+        regionContainer.classList.remove('disabled');
         renderElementAndClean(listContainer, HTML, 'afterbegin');
     } else {
         const counter = document.querySelector('.region > input');
@@ -107,12 +106,6 @@ function addMarkers(map, data) {
                 markersInRegion.push(marker);
             });
             polesMarkers.push(markersInRegion);
-        });
-
-        counter.addEventListener('input', (event) => {
-            event.preventDefault();
-            console.log(counter.max);
-            console.log(counter.value);
         });
 
         counter.value = polesMarkers.length;
