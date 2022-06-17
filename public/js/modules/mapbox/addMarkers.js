@@ -1,10 +1,13 @@
 import { addBestPole } from './addBestPole.js';
 import { renderElementAndClean, renderElement, cleanElement } from '../renderElement.js';
 
+let clicked = 1;
+const zoom = 8;
+
 function addMarkers(map, data) {
     const slider = document.querySelector('.slider');
     slider.classList.remove('disabled');
-    // Show best pole
+
     addBestPole(map, data[0]);
 
     data.map((singleMarker, index) => {
@@ -76,17 +79,15 @@ function addMarkers(map, data) {
 
         renderElementAndClean(listContainer, HTML, 'afterbegin');
     } else {
-        let regionSelector = 0;
-        const prevButton = document.querySelector('.region > span:nth-of-type(1)');
-        const nextButton = document.querySelector('.region > span:nth-of-type(2)');
+        const counter = document.querySelector('.region > input');
         const regionsMarkers = [];
         const polesMarkers = [];
 
         Object.entries(filteredSources).forEach(([key, val]) => {
+            const points = turf.points(val.data.geometry.coordinates[0]);
             const formedObject = {
-                // TODO: Add Polygon area, Add center of that polygon
                 area: val.data.geometry.coordinates[0],
-                center: turf.center(allPoints).geometry.coordinates,
+                center: turf.center(points).geometry.coordinates,
             };
             regionsMarkers.push(formedObject);
         });
@@ -96,8 +97,11 @@ function addMarkers(map, data) {
 
         regionsMarkers.forEach((region) => {
             const markersInRegion = [];
+            const points = region.area;
+            const polygon = turf.polygon([points]);
+
             allMarkersArray.forEach((marker) => {
-                const point = turf.point([marker.coordinates[0], marker.coordinates[1]]);
+                const point = turf.point(marker.coordinates);
                 const ifIsInPolygon = turf.booleanPointInPolygon(point, polygon);
                 if (!ifIsInPolygon) return;
                 markersInRegion.push(marker);
@@ -105,7 +109,36 @@ function addMarkers(map, data) {
             polesMarkers.push(markersInRegion);
         });
 
-        console.log(polesMarkers);
+        counter.addEventListener('input', (event) => {
+            event.preventDefault();
+            console.log(counter.max);
+            console.log(counter.value);
+        });
+
+        counter.value = polesMarkers.length;
+        counter.max = polesMarkers.length;
+        const listContainer = document.querySelector('.list-container');
+        const sliderValue = document.querySelector('#time').value;
+        const HTML = `
+        <ol>
+            ${polesMarkers[counter.value - 1]
+                .map(
+                    (bestPole, index) =>
+                        `<li class='${index} marker-${bestPole.markerTimeFrame[sliderValue]}'>
+                            <section><p>${index + 1}.</p><p>Laadpaal - ${bestPole.provider}</p></section>
+                            <section><p>Nu: <div class="power-${
+                                bestPole.markerTimeFrame[sliderValue]
+                            }"></div></p></section>
+                            <section><a target="_blank" href="http://www.google.com/maps/place/${
+                                bestPole.coordinates[1]
+                            },${bestPole.coordinates[0]}">Navigeer naar paal</a></section>
+                        </li>`,
+                )
+                .join('\n ')}
+        </ol>
+        `;
+
+        renderElementAndClean(listContainer, HTML, 'afterbegin');
     }
 }
 

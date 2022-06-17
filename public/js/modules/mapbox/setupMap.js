@@ -79,6 +79,7 @@ function setupMap(position) {
             // Catch error if area was already searched for and return afterwards
             console.error(error);
             window.FlashMessage.error('The location you searched for is already loaded on the map');
+            Loading.remove();
             return;
         }
     });
