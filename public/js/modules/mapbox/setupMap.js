@@ -3,6 +3,7 @@ import { addUserLocation } from './addUserLocation.js';
 import { drawRegion } from './drawRegion.js';
 import { timeSlider } from '../timeSlider.js';
 import { poleList } from '../poleList.js';
+import { Loading } from '../loading.js';
 import { CONFIG } from '../config/flashMessageConfig.js';
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoia29lbmhhYWdzbWEiLCJhIjoiY2w0OGptdnNoMGQ5dDNrcjJhdzB0NG5wMCJ9.l2fZnsgmtiTsrRW_f28CEQ';
@@ -11,7 +12,6 @@ const userLocationButton = document.querySelector('.getUserLocation');
 const bottomMenu = document.querySelector('.buttomMenu');
 const zoom = 8;
 const maxMarkerValue = 10;
-//// Divided by two because markers are picked from front of array and back of array
 const maxMarkers = maxMarkerValue;
 
 function setupMap(position) {
@@ -41,6 +41,8 @@ function setupMap(position) {
     // Geocoder on search and found a location then ->
     geocoder.on('result', async (event) => {
         // Add geocoder to map (Location finder)
+        const loadedMap = document.querySelector('#map');
+        Loading.start(loadedMap);
         try {
             let coordinates = {};
             const plusMinus = 0.01;
@@ -72,16 +74,18 @@ function setupMap(position) {
 
             // Add all other markers
             addMarkers(map, data.slice(0, maxMarkers));
+            Loading.remove();
         } catch (error) {
             // Catch error if area was already searched for and return afterwards
             console.error(error);
+            window.FlashMessage.error('The location you searched for is already loaded on the map');
             return;
         }
     });
 
     map.on('load', async () => {
         try {
-            const bigListButton = document.querySelector('.openMenu ');
+            const bigListButton = document.querySelector('.openMenu');
             const slider = document.querySelector('.slider');
             let clicked = 1;
             userLocationButton.style.display = 'flex';
@@ -107,6 +111,8 @@ function setupMap(position) {
 
             userLocationButton.addEventListener('click', (event) => {
                 event.preventDefault();
+                const loadedMap = document.querySelector('#map');
+                Loading.start(loadedMap);
 
                 const setPosition = async (position) => {
                     const center = [position.coords.longitude, position.coords.latitude];
@@ -136,24 +142,25 @@ function setupMap(position) {
                     const data = await response.json();
 
                     addMarkers(map, data.slice(0, maxMarkers));
+                    Loading.remove();
                 };
 
                 const errorLocation = (error) => {
                     switch (error.code) {
                         case error.PERMISSION_DENIED:
-                            console.error('User denied the request for Geolocation.');
+                            window.FlashMessage.error('You denied the request for Geolocation.');
                             break;
 
                         case error.POSITION_UNAVAILABLE:
-                            console.error('Location information is unavailable.');
+                            window.FlashMessage.error('Location information is unavailable.');
                             break;
 
                         case error.TIMEOUT:
-                            console.error('The request to get user location timed out.');
+                            window.FlashMessage.error('The request to get user location timed out.');
                             break;
 
                         case error.UNKNOWN_ERROR:
-                            console.error('An unknown error occurred.');
+                            window.FlashMessage.error('An unknown error occurred.');
                             break;
                     }
                 };
@@ -162,71 +169,8 @@ function setupMap(position) {
                     enableHighAccuracy: true,
                 });
             });
-
-            // const response = await fetch(`/poles?lng=${position.lng}&lat=${position.lat}`);
-            // const data = await response.json();
-
-            // Show best pole
-            // const bestPole = data.shift();
-            // const HTMLMarkerBest = document.createElement('div');
-            // HTMLMarkerBest.className = 'custom-marker-best-pole';
-            // const bestMarker = new mapboxgl.Marker(HTMLMarkerBest, {
-            //     scale: 0.5,
-            // })
-            //     .setLngLat([bestPole.coordinates.longitude, bestPole.coordinates.latitude])
-            //     .addTo(map);
-
-            // // Show personal position
-
-            // // Draw line between person and best pole
-            // // Add line to map
-            // map.addSource('absoluteline', {
-            //     type: 'geojson',
-            //     lineMetrics: true,
-            //     data: {
-            //         type: 'Feature',
-            //         properties: {
-            //             title: `Afstand: ${bestPole.distance}`,
-            //         },
-            //         geometry: {
-            //             type: 'LineString',
-            //             coordinates: [
-            //                 [bestPole.coordinates.longitude, bestPole.coordinates.latitude],
-            //                 [position.lng, position.lat],
-            //             ],
-            //         },
-            //     },
-            // });
-
-            // // Draw line on map
-            // map.addLayer({
-            //     id: 'absoluteline',
-            //     type: 'line',
-            //     source: 'absoluteline',
-            //     layout: {
-            //         'line-join': 'round',
-            //         'line-cap': 'round',
-            //     },
-            //     paint: {
-            //         'line-color': '#46BD54',
-            //         'line-width': 4,
-            //         'line-gradient': [
-            //             'interpolate',
-            //             ['linear'],
-            //             ['line-progress'],
-            //             0,
-            //             `#46BD54`,
-            //             0.75,
-            //             `#46BD54`,
-            //             1,
-            //             `#060F2B`,
-            //         ],
-            //     },
-            // });
-
-            // Add all extra markers to map
-            // addToMap(map, data.slice(0, maxMarkers));
         } catch (e) {
+            window.FlashMessage.error('Something went wrong while loading the map', CONFIG);
             console.error(e);
         }
     });

@@ -1,3 +1,5 @@
+import { CONFIG } from './config/flashMessageConfig.js';
+
 function timeSlider(map) {
     const slider = document.querySelector('#time');
     const time = document.querySelector('.timeP');
@@ -54,6 +56,7 @@ function timeSlider(map) {
         });
     } catch (error) {
         console.error(error);
+        window.FlashMessage.error(error, CONFIG);
         return;
     }
 }

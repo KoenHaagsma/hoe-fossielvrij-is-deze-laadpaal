@@ -1,4 +1,4 @@
-import { renderElementAndClean, renderElement, cleanElement } from './renderElement.js';
+// import { renderElementAndClean, renderElement, cleanElement } from './renderElement.js';
 
 const bigListButton = document.querySelector('.listButton');
 const openButton = document.querySelector('.openMenu ');
@@ -28,31 +28,29 @@ function poleList(map, clicked, zoom, allMarkers) {
 
     const listContainer = document.querySelector('.list-container');
     listContainer.classList.remove('disabled');
-    const slider = document.querySelector('#time');
+    // const slider = document.querySelector('#time');
     const sliderContainer = document.querySelector('.slider');
 
-    console.log(bestPoles);
+    // const HTML = `
+    // <ol>
+    //     ${bestPoles
+    //         .map(
+    //             (bestPole, index) =>
+    //                 `<li class='${index} marker-${bestPole.markerTimeFrame[slider.value]}'>
+    //                     <section><p>${index + 1}.</p><p>Laadpaal - ${bestPole.provider}</p></section>
+    //                     <section><p>Nu: <div class="power-${
+    //                         bestPole.markerTimeFrame[slider.value]
+    //                     }"></div></p></section>
+    //                     <section><a target="_blank" href="http://www.google.com/maps/place/${bestPole.coordinates[1]},${
+    //                     bestPole.coordinates[0]
+    //                 }">Navigeer naar paal &#8594</a></section>
+    //                 </li>`,
+    //         )
+    //         .join('\n ')}
+    // </ol>
+    // `;
 
-    const HTML = `
-    <ol>
-        ${bestPoles
-            .map(
-                (bestPole, index) =>
-                    `<li class='${index} marker-${bestPole.markerTimeFrame[slider.value]}'>
-                        <section><p>${index + 1}.</p><p>Laadpaal - ${bestPole.provider}</p></section>
-                        <section><p>Nu: <div class="power-${
-                            bestPole.markerTimeFrame[slider.value]
-                        }"></div></p></section>
-                        <section><a target="_blank" href="http://www.google.com/maps/place/${bestPole.coordinates[1]},${
-                        bestPole.coordinates[0]
-                    }">Navigeer naar paal &#8594</a></section>
-                    </li>`,
-            )
-            .join('\n ')}
-    </ol>
-    `;
-
-    renderElementAndClean(listContainer, HTML, 'afterbegin');
+    // renderElementAndClean(listContainer, HTML, 'afterbegin');
     bigListButton.classList.toggle('extended');
     sliderContainer.classList.toggle('extended');
     openButton.classList.toggle('extended');

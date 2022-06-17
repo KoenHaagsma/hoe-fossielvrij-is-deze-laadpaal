@@ -5,6 +5,8 @@
 #map {
     height: 100%;
     width: 100%;
+    position: relative;
+
     .custom-marker-personal {
         cursor: pointer;
         background-repeat: no-repeat;
@@ -183,7 +185,7 @@
         opacity: 0.5;
     }
     &.extended {
-        bottom: 12.8rem !important;
+        bottom: 13.6rem !important;
     }
 }
 
@@ -229,7 +231,7 @@
             margin-left: 0.5rem;
         }
         &.extended {
-            top: -4.9rem;
+            top: -5.5rem;
             img {
                 transform: rotate(180deg);
             }
@@ -245,11 +247,18 @@
         border-radius: 20px 20px 0 0;
         transition: all var(--TransitionTimer) cubic-bezier(0.34, 1.56, 0.64, 1);
         &.extended {
-            height: 160% !important;
+            height: 170% !important;
         }
         .content {
             color: black !important;
             font-size: 1rem !important;
+        }
+        .region {
+            margin-top: 2rem;
+            padding-left: 2rem;
+            span {
+                padding: 0.25rem;
+            }
         }
         .list-container {
             overflow-x: scroll;
@@ -263,6 +272,7 @@
                 width: fit-content;
                 padding: 0 1rem 1rem;
                 list-style-type: none;
+                margin: 0;
                 li {
                     scroll-snap-align: center;
                     position: relative;

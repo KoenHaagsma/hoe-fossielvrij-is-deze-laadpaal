@@ -3,6 +3,7 @@ extends ./layouts/layout.pug
 
 block content
     section#map
+        h2(class="animate") Loading
     section.menu
     .buttons
         button.getUserLocation Mijn locatie
@@ -17,5 +18,8 @@ block content
             p Open Lijst
             img(src="/images/right-arrow.svg")
         .listButton.disabled
+            .region 
+                span Vorige regio
+                span Volgende regio
             .list-container
         
