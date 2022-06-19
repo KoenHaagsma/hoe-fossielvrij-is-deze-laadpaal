@@ -144,13 +144,14 @@
 
 .buttons {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     position: absolute;
     top: 0;
     left: 0;
     z-index: 25;
     padding: 1.5rem;
-    .getUserLocation {
+    .getUserLocation,
+    .removeUserLocation {
         padding: 0.9rem 12px;
         border-radius: 4px;
         font-size: 1rem;
@@ -161,17 +162,42 @@
         box-shadow: 0px 8px 24px rgba(112, 144, 176, 0.15);
         border: none;
         cursor: pointer;
+        transition: all 0.25s;
+        &:hover {
+            scale: 1.075;
+        }
+    }
+    .removeUserLocation {
+        &.enabled {
+            display: block !important;
+            margin-top: 0.5rem;
+        }
     }
 }
 
 .slider {
     position: absolute;
     display: flex;
+    align-items: center;
     bottom: 8rem;
     right: 0;
     margin-right: 1rem;
     transition: all var(--TransitionTimer) cubic-bezier(0.34, 1.56, 0.64, 1);
     z-index: 25;
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0 1rem;
+    margin-bottom: 0.5rem;
+    max-width: 95vw;
+    @media screen and (max-width: 450px) {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    .sliderPart {
+        display: flex;
+    }
+    .buttonPart {
+        display: flex;
+    }
     p {
         padding: 0.25rem;
         background-color: white;
@@ -180,6 +206,32 @@
             margin-right: 0.5rem;
         }
     }
+    .plus,
+    .minus {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        height: fit-content;
+        width: 2rem;
+        height: 1.75rem;
+        border-radius: 5px;
+        margin: 0.25rem;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.25s;
+        &:hover {
+            scale: 1.1;
+        }
+    }
+    .future {
+        margin-right: 0.5rem;
+    }
+
+    #time {
+        transition: all 0.25s;
+    }
+
     &.disabled {
         pointer-events: none;
         opacity: 0.5;
@@ -200,10 +252,17 @@
     background-color: #43bc53;
     z-index: 25;
     .content {
-        margin-top: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1.2rem;
         color: white;
-        font-size: 12px;
+        font-size: 1rem;
         text-align: center;
+        span {
+            font-size: 1.25rem;
+            margin-left: 0.25rem;
+        }
     }
 
     .openMenu {
@@ -218,7 +277,6 @@
         text-align: center;
         margin-top: 0.5rem;
         opacity: 0.5;
-
         p {
             margin: 0;
             font-weight: bold;
@@ -254,6 +312,7 @@
             font-size: 1rem !important;
         }
         .region {
+            display: none;
             margin-top: 2rem;
             padding-left: 2rem;
             &.disabled {
@@ -273,7 +332,7 @@
             ol {
                 display: flex;
                 width: fit-content;
-                padding: 0 1rem 1rem;
+                padding: 1.2rem 1rem 1rem;
                 list-style-type: none;
                 margin: 0;
                 li {
@@ -392,5 +451,42 @@
                 }
             }
         }
+    }
+}
+
+.pop-up-img {
+    width: 2rem;
+    height: 2rem;
+    background-size: contain;
+    margin-left: 0.5rem;
+    &.power-46BD54 {
+        background-image: url(../images/solar-panel.svg);
+    }
+    &.power-C7D751 {
+        background-image: url(../images/solar-panel.svg);
+    }
+    &.power-EAD649 {
+        background-image: url(../images/solar-panel.svg);
+    }
+    &.power-D3A940 {
+        background-image: url(../images/wind-power.svg);
+    }
+    &.power-C08337 {
+        background-image: url(../images/wind-power.svg);
+    }
+    &.power-9F522A {
+        background-image: url(../images/refinery.svg);
+    }
+    &.power-733519 {
+        background-image: url(../images/refinery.svg);
+    }
+    &.power-251304 {
+        background-image: url(../images/powerplant.svg);
+    }
+    &.power-000000 {
+        background-image: url(../images/powerplant.svg);
+    }
+    &.power-ffffff {
+        background-image: url(../images/powerplant.svg);
     }
 }

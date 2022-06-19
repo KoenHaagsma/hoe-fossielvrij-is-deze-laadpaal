@@ -86,9 +86,52 @@ function setupMap(position) {
 
     map.on('load', async () => {
         try {
+            if (window.localStorage.getItem('user-location')) {
+                const center = JSON.parse(window.localStorage.getItem('user-location'));
+                const removeLocationButton = document.querySelector('.removeUserLocation');
+
+                map.flyTo({
+                    center: center.center,
+                    essential: true,
+                    zoom: zoom * 1.45,
+                });
+
+                addUserLocation(map, center.center);
+
+                let coordinates = {
+                    lngF: center.center[0] - 0.01,
+                    lngS: center.center[0] + 0.01,
+                    latF: center.center[1] - 0.01,
+                    latS: center.center[1] + 0.01,
+                };
+
+                let id = coordinates.lngF + coordinates.latF;
+
+                drawRegion(map, coordinates, id);
+
+                const response = await fetch(
+                    `/poles?lngF=${coordinates.lngF}&latF=${coordinates.latF}&lngS=${coordinates.lngS}&latS=${coordinates.latS}`,
+                );
+                const data = await response.json();
+
+                addMarkers(map, data.slice(0, maxMarkers));
+
+                // removeLocationButton.classList.add('enabled');
+                // removeLocationButton.addEventListener('click', () => {
+                //     window.localStorage.removeItem('user-location');
+                //     removeLocationButton.classList.remove('disabeld');
+                //     removeLocationButton.removeEventListener('click', () => {});
+                // });
+            }
+
             const bigListButton = document.querySelector('.openMenu');
             const slider = document.querySelector('.slider');
+            const sliderValue = document.querySelector('#time');
+            const plus = document.querySelector('.plus');
+            const minus = document.querySelector('.minus');
+            const bestTime = document.querySelector('.content > span');
             let clicked = 1;
+
             userLocationButton.style.display = 'flex';
             bottomMenu.style.display = 'flex';
 
@@ -96,6 +139,18 @@ function setupMap(position) {
 
             slider.addEventListener('input', (event) => {
                 event.preventDefault();
+                timeSlider(map);
+            });
+
+            plus.addEventListener('click', (e) => {
+                e.preventDefault();
+                sliderValue.value++;
+                timeSlider(map);
+            });
+
+            minus.addEventListener('click', (e) => {
+                e.preventDefault();
+                sliderValue.value--;
                 timeSlider(map);
             });
 
@@ -116,21 +171,28 @@ function setupMap(position) {
                 Loading.start(loadedMap);
 
                 const setPosition = async (position) => {
-                    const center = [position.coords.longitude, position.coords.latitude];
+                    let center;
+
+                    if (!window.localStorage.getItem('user-location')) {
+                        center = { center: [position.coords.longitude, position.coords.latitude] };
+                        window.localStorage.setItem('user-location', JSON.stringify(center));
+                    } else {
+                        center = position;
+                    }
 
                     map.flyTo({
-                        center: center,
+                        center: center.center,
                         essential: true,
                         zoom: zoom * 1.45,
                     });
 
-                    addUserLocation(map, center);
+                    addUserLocation(map, center.center);
 
                     let coordinates = {
-                        lngF: position.coords.longitude - 0.01,
-                        lngS: position.coords.longitude + 0.01,
-                        latF: position.coords.latitude - 0.01,
-                        latS: position.coords.latitude + 0.01,
+                        lngF: center.center[0] - 0.01,
+                        lngS: center.center[0] + 0.01,
+                        latF: center.center[1] - 0.01,
+                        latS: center.center[1] + 0.01,
                     };
 
                     let id = coordinates.lngF + coordinates.latF;
@@ -166,9 +228,13 @@ function setupMap(position) {
                     }
                 };
 
-                navigator.geolocation.getCurrentPosition(setPosition, errorLocation, {
-                    enableHighAccuracy: true,
-                });
+                if (window.localStorage.getItem('user-location')) {
+                    setPosition(JSON.parse(window.localStorage.getItem('user-location')));
+                } else {
+                    navigator.geolocation.getCurrentPosition(setPosition, errorLocation, {
+                        enableHighAccuracy: true,
+                    });
+                }
             });
         } catch (e) {
             window.FlashMessage.error('Something went wrong while loading the map', CONFIG);

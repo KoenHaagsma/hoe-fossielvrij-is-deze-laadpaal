@@ -45,7 +45,6 @@ function poleList(map, clicked, zoom, allMarkers) {
 
     let observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-            console.log(entry);
             if (!entry.isIntersecting) return;
             const index = entry.target.classList[0];
             map.flyTo({

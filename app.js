@@ -45,7 +45,28 @@ app.get('/offline', (req, res) => {
 });
 
 app.get('/map', async (req, res) => {
-    res.render('map', { date: new Date().getHours() });
+    const client = new InfluxDB({ url: process.env.INFLUXDB_URL, token: process.env.INFLUXDB_KEY });
+    const queryApi = client.getQueryApi(process.env.INFLUXDB_ORG);
+
+    const query = `
+    from(bucket: "elmap")
+        |> range(start: now(), stop: 24h)
+        |> filter(fn: (r) => r["_measurement"] == "forecast")
+        |> filter(fn: (r) => r["_field"] == "carbonIntensity")
+        |> filter(fn: (r) => r["kind"] == "totals")
+        |> filter(fn: (r) => r["zone"] == "NL")
+        |> filter(fn: (r) => r["timeoffset"] == "baseline")
+        |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)
+        |> yield(name: "mean")
+    `;
+
+    const rows = await queryApi.collectRows(query);
+    const carbonIntensity = Object.entries(groupBy(rows, '_field'));
+
+    // https://stackoverflow.com/questions/4020796/finding-the-max-value-of-an-attribute-in-an-array-of-objects
+    const bestValue = carbonIntensity[0][1].reduce((prev, current) => (prev.y_value > current._value ? current : prev));
+
+    res.render('map', { date: new Date().getHours(), bestHour: new Date(bestValue._time).getHours() });
 });
 
 app.get('/list', (req, res) => {
