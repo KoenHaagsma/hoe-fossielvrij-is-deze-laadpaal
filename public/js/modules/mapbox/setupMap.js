@@ -87,41 +87,35 @@ function setupMap(position) {
     map.on('load', async () => {
         try {
             if (window.localStorage.getItem('user-location')) {
-                const center = JSON.parse(window.localStorage.getItem('user-location'));
-                const removeLocationButton = document.querySelector('.removeUserLocation');
+                window.addEventListener('load', async () => {
+                    window.FlashMessage.info('Navigeren naar laatste eigen locatie', CONFIG);
+                    const center = JSON.parse(window.localStorage.getItem('user-location'));
+                    map.flyTo({
+                        center: center.center,
+                        essential: true,
+                        zoom: zoom * 1.45,
+                    });
 
-                map.flyTo({
-                    center: center.center,
-                    essential: true,
-                    zoom: zoom * 1.45,
+                    addUserLocation(map, center.center);
+
+                    let coordinates = {
+                        lngF: center.center[0] - 0.01,
+                        lngS: center.center[0] + 0.01,
+                        latF: center.center[1] - 0.01,
+                        latS: center.center[1] + 0.01,
+                    };
+
+                    let id = coordinates.lngF + coordinates.latF;
+
+                    drawRegion(map, coordinates, id);
+
+                    const response = await fetch(
+                        `/poles?lngF=${coordinates.lngF}&latF=${coordinates.latF}&lngS=${coordinates.lngS}&latS=${coordinates.latS}`,
+                    );
+                    const data = await response.json();
+
+                    addMarkers(map, data.slice(0, maxMarkers));
                 });
-
-                addUserLocation(map, center.center);
-
-                let coordinates = {
-                    lngF: center.center[0] - 0.01,
-                    lngS: center.center[0] + 0.01,
-                    latF: center.center[1] - 0.01,
-                    latS: center.center[1] + 0.01,
-                };
-
-                let id = coordinates.lngF + coordinates.latF;
-
-                drawRegion(map, coordinates, id);
-
-                const response = await fetch(
-                    `/poles?lngF=${coordinates.lngF}&latF=${coordinates.latF}&lngS=${coordinates.lngS}&latS=${coordinates.latS}`,
-                );
-                const data = await response.json();
-
-                addMarkers(map, data.slice(0, maxMarkers));
-
-                // removeLocationButton.classList.add('enabled');
-                // removeLocationButton.addEventListener('click', () => {
-                //     window.localStorage.removeItem('user-location');
-                //     removeLocationButton.classList.remove('disabeld');
-                //     removeLocationButton.removeEventListener('click', () => {});
-                // });
             }
 
             const bigListButton = document.querySelector('.openMenu');
@@ -212,18 +206,22 @@ function setupMap(position) {
                     switch (error.code) {
                         case error.PERMISSION_DENIED:
                             window.FlashMessage.error('You denied the request for Geolocation.');
+                            Loading.remove();
                             break;
 
                         case error.POSITION_UNAVAILABLE:
                             window.FlashMessage.error('Location information is unavailable.');
+                            Loading.remove();
                             break;
 
                         case error.TIMEOUT:
                             window.FlashMessage.error('The request to get user location timed out.');
+                            Loading.remove();
                             break;
 
                         case error.UNKNOWN_ERROR:
                             window.FlashMessage.error('An unknown error occurred.');
+                            Loading.remove();
                             break;
                     }
                 };
@@ -237,7 +235,7 @@ function setupMap(position) {
                 }
             });
         } catch (e) {
-            window.FlashMessage.error('Something went wrong while loading the map', CONFIG);
+            Loading.remove();
             console.error(e);
         }
     });

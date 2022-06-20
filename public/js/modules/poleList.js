@@ -50,7 +50,7 @@ function poleList(map, clicked, zoom, allMarkers) {
             map.flyTo({
                 center: bestPoles[index].coordinates,
                 essential: true,
-                zoom: zoom * 1.75,
+                zoom: zoom * 2,
             });
             bestPoles.forEach((pole) => {
                 pole.classList.remove('focused');

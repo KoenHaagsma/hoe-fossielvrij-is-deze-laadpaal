@@ -8,6 +8,7 @@ const Loading = {
     },
     remove: () => {
         const loader = document.querySelector('.animate');
+        if (!loader) return;
         loader.remove();
     },
 };

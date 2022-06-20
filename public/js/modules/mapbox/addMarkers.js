@@ -21,13 +21,12 @@ function addMarkers(map, data) {
         HTMLMarker['status'] = singleMarker.status;
 
         // Pop up for testing energy providers
-        console.log(singleMarker);
         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`<section>
-        <p>${Math.round(singleMarker.distance * 1000)}m</p>
-        <p>${singleMarker.status}</p>
-        <div><p>Laadpaal</p><p>${singleMarker.operatorName}</p></div>
-        <div><p>Nu:</p><div class="pop-up-img power-${singleMarker.score}"></div></div>
-        <a target="_blank" href="http://www.google.com/maps/place/${singleMarker.coordinates.latitude},${
+            <p>${Math.round(singleMarker.distance * 1000)}m</p>
+            <p>${singleMarker.status}</p>
+            <div><p>Laadpaal</p><p>${singleMarker.operatorName}</p></div>
+            <div><p>Nu:</p><div class="pop-up-img power-${singleMarker.score}"></div></div>
+            <a target="_blank" href="http://www.google.com/maps/place/${singleMarker.coordinates.latitude},${
             singleMarker.longitude
         }">Navigeer</a>
         </section>`);

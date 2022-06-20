@@ -1,5 +1,5 @@
-const STATIC_CACHE_NAME = 'site-static-v1.1.0';
-const DYNAMIC_CACHE_NAME = 'site-dynamic-v1.1.0';
+const STATIC_CACHE_NAME = 'site-static-v1.1.1';
+const DYNAMIC_CACHE_NAME = 'site-dynamic-v1.1.1';
 const CACHE_FILES = [
     '/',
     '/map',
@@ -7,7 +7,6 @@ const CACHE_FILES = [
     '/manifest.json',
     '/css/main.min.css',
     '/js/modules/renderElement.js',
-    '/js/sw-register.js',
     '/images/000000.svg',
     '/images/9F522A.svg',
     '/images/46BD54.svg',
@@ -22,6 +21,11 @@ const CACHE_FILES = [
     '/images/ListButton.svg',
     '/images/Personal.svg',
     '/images/search.svg',
+    '/images/powerplant.svg',
+    '/images/refinery.svg',
+    '/images/right-arrow.svg',
+    '/images/solar-panel.svg',
+    '/images/wind-power.scg',
 ];
 
 // Install service worker
