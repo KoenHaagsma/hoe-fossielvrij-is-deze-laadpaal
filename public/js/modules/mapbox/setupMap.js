@@ -123,7 +123,6 @@ function setupMap(position) {
             const sliderValue = document.querySelector('#time');
             const plus = document.querySelector('.plus');
             const minus = document.querySelector('.minus');
-            const bestTime = document.querySelector('.content > span');
             let clicked = 1;
 
             userLocationButton.style.display = 'flex';

@@ -6,8 +6,8 @@ function timeSlider(map) {
     const timeNow = new Date().getHours();
 
     let timeFuture = parseInt(timeNow) + parseInt(slider.value);
-    if (timeFuture > 24) {
-        timeFuture -= 25;
+    if (timeFuture > 23) {
+        timeFuture -= 24;
     }
     time.innerText = `${timeFuture}:00`;
 
