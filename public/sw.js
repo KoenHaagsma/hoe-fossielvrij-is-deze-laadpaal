@@ -1,12 +1,13 @@
-const STATIC_CACHE_NAME = 'site-static-v1.1.2';
-const DYNAMIC_CACHE_NAME = 'site-dynamic-v1.1.1';
+const STATIC_CACHE_NAME = 'site-static-v1.1.3';
+const DYNAMIC_CACHE_NAME = 'site-dynamic-v1.1.2';
 const CACHE_FILES = [
+    '/images/Personal.svg',
+    '/images/best.svg',
     '/images/000000.svg',
     '/images/9F522A.svg',
     '/images/46BD54.svg',
     '/images/251304.svg',
     '/images/733519.svg',
-    '/images/best.svg',
     '/images/C7D751.svg',
     '/images/C08337.svg',
     '/images/D3A940.svg',
@@ -19,7 +20,6 @@ const CACHE_FILES = [
     '/css/main.min.css',
     '/js/modules/renderElement.js',
     '/images/ListButton.svg',
-    '/images/Personal.svg',
     '/images/search.svg',
     '/images/powerplant.svg',
     '/images/refinery.svg',

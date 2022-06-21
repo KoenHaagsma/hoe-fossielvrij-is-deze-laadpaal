@@ -14,8 +14,8 @@ function addBestPole(map, bestPole) {
         <div><p>Laadpaal</p><p>${bestPole.operatorName}</p></div>
         <div><p>Nu:</p><div class="pop-up-img power-${bestPole.score}"></div></div>
         <a target="_blank" href="http://www.google.com/maps/place/${bestPole.coordinates.latitude},${
-        bestPole.longitude
-    }">Navigeer</a>
+        bestPole.coordinates.longitude
+    }">Navigeer naar paal</a>
         </section>`);
 
     const bestMarker = new mapboxgl.Marker(HTMLMarker, {
