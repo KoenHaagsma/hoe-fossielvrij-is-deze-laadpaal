@@ -3,7 +3,7 @@
 ![Screenshot of the application](./readme_images/Screenshot_apps.png)
 
 ## 📂 Assignment
-Built and develop a webapplication where it is possible to see where a user can load sustainable, or where he/she can do it at the best place possible
+Built and develop a webapplication where it is possible to see where a user can load sustainable, or where he/she can do it at the best place possible.
 
 ## 🧾 Table of contents
 -   [About the project](##About-the-project)
