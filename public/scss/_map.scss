@@ -259,6 +259,8 @@
         color: white;
         font-size: 1rem;
         text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
         span {
             font-size: 1.25rem;
             margin-left: 0.25rem;
