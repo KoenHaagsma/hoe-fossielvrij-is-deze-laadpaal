@@ -20,6 +20,10 @@ The project is about getting EV users to load more sustainable, loading green ca
 
 The CO2 emitted at other moments of the same day are far less and that moments should be motivated to EV users, because the driving of green cars is much greener when loading at that certain moment.
 
+The application is built from the [Projects tab](https://github.com/users/KoenHaagsma/projects/1/views/1) all features and skipped features/bugs are displayed there.
+
+For more details about the project, please take a look at the [Wiki tab](https://github.com/KoenHaagsma/hoe-fossielvrij-is-deze-laadpaal/wiki).
+
 ## 🛠 Built with
 Node.js, Express, Pug, SCSS
 
